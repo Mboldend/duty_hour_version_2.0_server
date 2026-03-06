@@ -6,6 +6,8 @@ import { emailTemplate } from '../../shared/emailTemplate';
 import { emailHelper } from '../emailHelper';
 
 export const handleIndividualSubscriptionCreated = async (data: Stripe.Checkout.Session) => {
+    const subscription = await Subscription.findById(data.metadata?.subscriptionId);
+    let currentEmployees = subscription?.totalEmployees || 0;
     const session = data as Stripe.Checkout.Session;
     if (session.payment_status !== 'paid') {
         console.log('Payment not completed, skipping...');
@@ -21,7 +23,7 @@ export const handleIndividualSubscriptionCreated = async (data: Stripe.Checkout.
             {
                 $inc: {
                     price: packagePrice,
-                    totalEmployees: 1,
+                    totalEmployees: currentEmployees + 1,
                 }
             },
             { new: true },
