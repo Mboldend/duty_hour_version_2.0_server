@@ -1,0 +1,4 @@
+export enum HOLIDAY_TYPE {
+  OFFICE = 'OFFICE',
+  GOVERNMENT = 'GOVERNMENT',
+}

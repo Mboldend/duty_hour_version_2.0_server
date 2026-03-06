@@ -1,0 +1,14 @@
+export enum STATUS {
+  PRESENT = 'PRESENT',
+  ABSENT = 'ABSENT',
+  LEAVE = 'LEAVE',
+  LATE = 'LATE',
+  HOLIDAY = 'HOLIDAY',
+  OFFDAY = 'OFFDAY',
+}
+
+export enum MANUAL_STATUS {
+  PENDING = 'PENDING',
+  APPROVE = 'APPROVE',
+  REJECT = 'REJECT',
+}

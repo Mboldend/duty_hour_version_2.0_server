@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Contact - The Duty Hour App</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .support-container {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+      transform: translateY(40px);
+      opacity: 0;
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      color: #3c7c89;
+      font-size: 28px;
+      font-weight: 700;
+      animation: slideIn 1s ease-out forwards;
+    }
+
+    p {
+      margin: 12px 0;
+      font-size: 16px;
+      color: #444;
+      animation: fadeIn 1.2s ease-in forwards;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: #3c7c89;
+      transition: color 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .highlight:hover {
+      color: #2a5f66;
+      transform: translateY(-2px);
+    }
+
+    .address {
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    footer {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #666;
+      animation: fadeIn 1.4s ease-in forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-25px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .support-container {
+        padding: 25px 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="support-container">
+    <h1>Support Contact</h1>
+    <p>Email: <span class="highlight">sales@mboldend.com</span></p>
+    <p>Phone: <span class="highlight">(1) 267-226-1461</span></p>
+    <p>Address:</p>
+    <p class="highlight address">
+      6210 Fairway Ln, <br />
+      Allentown, PA 18106
+    </p>
+    <footer>&copy; 2025 The Duty Hour App. All rights reserved.</footer>
+  </div>
+</body>
+
+</html>

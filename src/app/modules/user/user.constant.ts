@@ -1,0 +1,4 @@
+export enum SHIFT_STATUS {
+  ASSIGNED = 'ASSIGNED',
+  UNASSIGNED = 'UNASSIGNED',
+}

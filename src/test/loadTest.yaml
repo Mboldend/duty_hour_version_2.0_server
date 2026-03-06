@@ -1,0 +1,12 @@
+config:
+  target: "http://10.10.7.44:5002"
+  phases:
+    - duration: 60       # running 1 minute
+      arrivalRate: 500    # new request per 20 seconds
+  defaults:
+    headers:
+      Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjUwMjRmM2U4NDZlMTA0ZjgyYWJlZiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzUyMDUxMTAxLCJleHAiOjE3NTQ2NDMxMDF9.08ygfsQyQkvmoUNzKdFYM2QqtpgXELI8wne1YchGNdk"
+scenarios:
+  - flow:
+      - get:
+          url: "/api/v1/analytics/monthly-revenue"
