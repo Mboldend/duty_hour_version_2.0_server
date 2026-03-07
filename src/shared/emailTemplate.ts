@@ -1,6 +1,6 @@
 import { ICreateAccount, IEmailTemplate, IResetPassword } from '../types/emailTamplate';
 
-const LOGO_URL = `10.10.7.111:5000/uploads/emobold.logo.png`;
+const LOGO_URL = `https://res.cloudinary.com/dabd4udau/image/upload/v1772862251/xcvjopcwvaaxrt7uhbsx.png`;
 
 const createAccount = (values: ICreateAccount) => {
   const data = {
@@ -8,7 +8,7 @@ const createAccount = (values: ICreateAccount) => {
     subject: 'Verify your Duty Hour Tracking Account',
     html: `<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 50px; padding: 20px; color: #555;">
     <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <img src="" alt="Logo" style="display: block; margin: 0 auto 20px; width:150px" />
+        <img src="${LOGO_URL}" alt="Logo" style="display: block; margin: 0 auto 20px; width:150px" />
           <h2 style="color: #3b7a87; font-size: 24px; margin-bottom: 20px;">Hey! ${values.name}, Welcome to Duty Hour Tracking App</h2>
         <div style="text-align: center;">
             <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Your single use code is:</p>
@@ -27,7 +27,7 @@ const resetPassword = (values: IResetPassword) => {
     subject: 'Reset your Duty Hour Tracking Account password',
     html: `<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 50px; padding: 20px; color: #555;">
     <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <img src="https://i.postimg.cc/6pgNvKhD/logo.png" alt="Logo" style="display: block; margin: 0 auto 20px; width:150px" />
+        <img src="${LOGO_URL}" alt="Logo" style="display: block; margin: 0 auto 20px; width:150px" />
         <div style="text-align: center;">
             <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Your single use code is:</p>
             <div style="background-color: #3b7a87; width: 80px; padding: 10px; text-align: center; border-radius: 8px; color: #fff; font-size: 25px; letter-spacing: 2px; margin: 20px auto;">${values.otp}</div>

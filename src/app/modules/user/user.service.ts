@@ -131,7 +131,7 @@ const createEmployeeToDB = async (
   if (packageType === "individual") {
     const currentEmployeeCount = packageDetails?.totalEmployees ?? 0;
 
-    if (currentEmployeeCount >= 1) {
+    if (currentEmployeeCount >= 2) {
       const session = await stripe.checkout.sessions.create({
         mode: 'payment',
         payment_method_types: ['card'],

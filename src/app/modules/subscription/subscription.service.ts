@@ -67,6 +67,7 @@ const createSubscriptionCheckoutSession = async (
 
   const pkg = await Package.findOne({ _id: packageId });
   if (!pkg) throw new ApiError(StatusCodes.NOT_FOUND, 'Package not found');
+  const finalTotalEmployees = totalEmployees || 0;
   const stripeCustomerId = await createStripeCustomerAccountToDB(userId);
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
@@ -74,7 +75,7 @@ const createSubscriptionCheckoutSession = async (
     line_items: [
       {
         price: pkg.stripePriceId,
-        quantity: totalEmployees,
+        quantity: finalTotalEmployees,
       },
     ],
     success_url: config.stripe.BULK_EMPLOYEE_CREATION_AFTER_PAYMENT_LINK!,
@@ -82,7 +83,7 @@ const createSubscriptionCheckoutSession = async (
     metadata: {
       userId: user._id.toString(),
       packageId: pkg._id.toString(),
-      totalEmployees: totalEmployees.toString(),
+      totalEmployees: finalTotalEmployees.toString(),
     },
   });
 

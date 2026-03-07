@@ -79,6 +79,16 @@ const deleteEmployeeById = catchAsync(async (req, res) => {
     id,
     employeeID,
   );
+  if (result.status === "fail") {
+    sendResponse(res, {
+      success: false,
+      statusCode: 404,
+      message: 'Employee not found',
+      data: result,
+    });
+    return;
+  }
+
   sendResponse(res, {
     success: true,
     statusCode: 200,
