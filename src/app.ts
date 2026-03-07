@@ -27,12 +27,12 @@ app.use(Morgan.errorHandler);
 app.use(
   cors({
     origin: [
-      // 'https://admin.dutyhourapp.com',
-      // 'https://www.admin.dutyhourapp.com',
-      // 'https://business.dutyhourapp.com',
-      // 'https://www.business.dutyhourapp.com',
-      // 'https://api.dutyhourapp.com',
-      // 'https://www.api.dutyhourapp.com',
+      'https://admin.dutyhourapp.com',
+      'https://www.admin.dutyhourapp.com',
+      'https://business.dutyhourapp.com',
+      'https://www.business.dutyhourapp.com',
+      'https://api.dutyhourapp.com',
+      'https://www.api.dutyhourapp.com',
       "http://10.10.7.62:5174",
       "http://10.10.7.62:5173"
 
