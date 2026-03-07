@@ -22,7 +22,6 @@ const calculateRemainingDays = (unixTimestamp: number | undefined): number => {
 
 export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
   try {
-    // সাবস্ক্রিপশন ডেটা নিয়ে আসা (fresh)
     const subscription = await stripe.subscriptions.retrieve(data.id);
 
     const customer = (await stripe.customers.retrieve(
@@ -53,8 +52,6 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
         `Pricing plan with Price ID: ${priceId} not found!`,
       );
     }
-
-    // ট্রানজেকশন আইডি নেওয়া
     let trxId: string | null = null;
     if (subscription.latest_invoice) {
       const invoice = (await stripe.invoices.retrieve(
@@ -68,7 +65,6 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
       }
     }
 
-    // আগের সাবস্ক্রিপশন চেক
     const currentActiveSubscription = await Subscription.findOne({
       userId: existingUser._id,
       status: SUBSCRIPTION_STATUS.ACTIVE,
@@ -81,7 +77,7 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
       if (
         String(currentActiveSubscription.packageId) !== String(pricingPlan._id)
       ) {
-        // পুরানো সাবস্ক্রিপশন নিষ্ক্রিয় করো
+  
         await Subscription.findByIdAndUpdate(currentActiveSubscription._id, {
           status: SUBSCRIPTION_STATUS.INACTIVE,
           remainingDays: 0,
@@ -108,7 +104,6 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
 
         await newSubscription.save();
       } else {
-        // একই প্যাকেজ, quantity ইত্যাদি আপডেট করো
         currentActiveSubscription.totalEmployees = employeeCount;
         currentActiveSubscription.price =
          // @ts-ignore

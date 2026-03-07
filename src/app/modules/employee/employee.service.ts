@@ -8,6 +8,7 @@ import { USER_ROLES } from '../../../enums/user';
 import unlinkFile from '../../../shared/unlinkFile';
 import { Department } from '../department/department.model';
 import { Institution } from '../institution/institution.model';
+import { Subscription } from '../subscription/subscription.model';
 
 const getEmployeesFromDB = async (userId: string, query: any) => {
   const page = query.page ? parseInt(query.page, 10) : 1;
@@ -237,46 +238,18 @@ const updateEmployeeStatusByIdToDB = async (
 };
 
 const deleteEmployeeByIdFromDB = async (userId: string, employeeID: string) => {
-  // get the requesting user's role
-  const requestingUser = await User.findById(userId).select('createdBy role');
-
-  if (!requestingUser) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+  const result = await User.findByIdAndDelete(employeeID).lean();
+  if (!result) {
+    return {
+      status: 'fail',
+    } as const;
   }
-
-  // trace root owner
-  let rootOwnerId = userId;
-  let currentUser: any = await User.findById(userId).select('createdBy');
-
-  while (currentUser?.createdBy) {
-    rootOwnerId = currentUser.createdBy.toString();
-    currentUser = await User.findById(currentUser.createdBy).select(
-      'createdBy',
-    );
-  }
-
-  // get all valid user IDs under the root owner
-  const allUserIds = await getAllUserIdsUnderRootOwner(rootOwnerId);
-
-  // check if employee is owned by a valid user
-  const employee = await User.findOne({
-    _id: employeeID,
-    createdBy: { $in: allUserIds },
-  });
-
-  if (!employee) {
-    throw new ApiError(
-      StatusCodes.NOT_FOUND,
-      'Employee not found or access denied',
-    );
-  }
-
-  const deleteEmployee = await User.findByIdAndDelete(employeeID).populate({
-    path: 'createdBy',
-    select: 'name email profileImage role',
-  });
-
-  return deleteEmployee;
+  await Subscription.findByIdAndUpdate(
+    { userId: userId },
+    { $inc: { totalEmployees: -1 } },
+    { new: true }
+  );
+  return result;
 };
 
 export const EmployeeServices = {
