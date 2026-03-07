@@ -197,14 +197,6 @@ export const updateRemainingDaysJob = new CronJob(
       };
     });
 
-    if (bulkOps.length) {
-      await Subscription.bulkWrite(bulkOps);
-      console.log(
-        `✅ Updated remainingDays for ${bulkOps.length} subscriptions`,
-      );
-    } else {
-      console.log('ℹ️ No subscriptions to update');
-    }
   },
   null,
   false,
