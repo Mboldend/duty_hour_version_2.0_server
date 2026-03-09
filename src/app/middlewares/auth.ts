@@ -7,7 +7,7 @@ import { jwtHelper } from '../../helpers/jwtHelper';
 
 const auth =
   (...roles: string[]) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const tokenWithBearer = req.headers.authorization;
       if (!tokenWithBearer) {

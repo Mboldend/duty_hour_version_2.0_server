@@ -57,7 +57,7 @@ router.post(
   fileUploadHandler(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const image = getSingleFilePath(req.files, "image");
+      const image = getSingleFilePath(req.files, 'image');
       if (image) {
         req.body.profileImage = image;
       }
@@ -124,6 +124,18 @@ router.patch(
 router.patch(
   '/status/:id',
   auth(USER_ROLES.SUPER_ADMIN),
+  fileUploadHandler(),
+  async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const image = getSingleFilePath(req.files, 'image');
+      if (image) {
+        req.body.profileImage = image;
+      }
+      next();
+    } catch (error) {
+      next(error);
+    }
+  },
   UserController.updateStatusById,
 );
 

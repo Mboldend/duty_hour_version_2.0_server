@@ -583,7 +583,7 @@ const updateStatusToDB = async (
 ) => {
   const businessOwner = await User.findById(id);
   if (!businessOwner) {
-    throw new ApiError(404, 'No business owner found database');
+    throw new ApiError(StatusCodes.NOT_FOUND, 'No business owner found database');
   }
   const result = await User.findByIdAndUpdate(id, { status }, { new: true });
   return result;
