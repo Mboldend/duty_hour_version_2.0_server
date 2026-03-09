@@ -25,10 +25,12 @@ router.get(
   SubscriptionControllers.getRemainingSubscription,
 );
 
-router.route("/my-subscription").get(
-  auth(USER_ROLES.BUSINESS_OWNER),
-  SubscriptionControllers.getMySubscriptionDetails,
-);
+router
+  .route('/my-subscription')
+  .get(
+    auth(USER_ROLES.BUSINESS_OWNER),
+    SubscriptionControllers.getMySubscriptionDetails,
+  );
 
 router.post(
   '/billing-portal',
@@ -41,6 +43,5 @@ router.patch(
   checkAccessFromRootSubscription,
   SubscriptionControllers.cancelSubscription,
 );
-
 
 export const SubscriptionRoutes = router;

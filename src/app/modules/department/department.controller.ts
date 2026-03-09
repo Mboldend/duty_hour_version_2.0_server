@@ -30,7 +30,7 @@ const createDepartment = catchAsync(async (req, res) => {
   }
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.CREATED,
     message: 'Department created successfully',
     data: result,
   });
@@ -40,7 +40,7 @@ const getDepartments = catchAsync(async (req: Request, res: Response) => {
   const result = await DepartmentServices.getDepartmentsFromDB(req.user!, req.query);
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Departments are retrieved successfully',
     data: result,
   });
@@ -55,7 +55,7 @@ const getDepartmentById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Department data is retrieved successfully',
     data: result,
   });
@@ -72,7 +72,7 @@ const updateDepartmentById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Department data is updated successfully',
     data: result,
   });
@@ -89,7 +89,7 @@ const updateDepartmentStatusById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Department status is updated successfully',
     data: result,
   });
@@ -104,7 +104,7 @@ const deleteDepartmentById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Department is deleted successfully',
     data: result,
   });

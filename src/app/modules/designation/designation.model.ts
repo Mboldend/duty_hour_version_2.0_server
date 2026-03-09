@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
 
 import { STATUS } from '../../../shared/constant';
-import { TDesignaton } from './designation.interface';
+import { TDesignation } from './designation.interface';
 
-const designationSchema = new Schema<TDesignaton>(
+const designationSchema = new Schema<TDesignation>(
   {
     designationName: {
       type: String,
@@ -36,4 +36,4 @@ const designationSchema = new Schema<TDesignaton>(
   },
 );
 
-export const Designation = model<TDesignaton>('Designation', designationSchema);
+export const Designation = model<TDesignation>('Designation', designationSchema);

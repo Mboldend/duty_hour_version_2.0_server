@@ -18,7 +18,6 @@ app.post(
   express.raw({ type: 'application/json' }),
   handleStripeWebhook,
 );
-
 // morgan logs
 app.use(Morgan.successHandler);
 app.use(Morgan.errorHandler);

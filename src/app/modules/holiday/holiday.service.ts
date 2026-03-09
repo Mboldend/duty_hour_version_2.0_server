@@ -9,35 +9,6 @@ import { getAllUserIdsUnderRootOwner } from '../../../util/getAllUserIdsUnderRoo
 import { STATUS } from '../../../shared/constant';
 import QueryBuilder from '../../builder/QueryBuilder';
 
-// const createHolidayToDB = async (payload: THoliday, user: JwtPayload) => {
-//   // convert string to Date
-//   const start = new Date(payload.startDate);
-//   const end = new Date(payload.endDate);
-
-//   // validate dates
-//   if (end < start) {
-//     throw new ApiError(
-//       StatusCodes.BAD_REQUEST,
-//       'End date cannot be before start date',
-//     );
-//   }
-
-//   // count total days including both start and end dates
-//   const totalDays = differenceInCalendarDays(end, start) + 1;
-//   payload.startDate = start.toISOString();
-//   payload.endDate = end.toISOString();
-//   payload.totalDay = totalDays;
-
-//   // assign createdBy
-//   payload.createdBy = user.id;
-
-//   const result = await Holiday.create(payload);
-//   if (!result) {
-//     throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create holiday');
-//   }
-
-//   return result;
-// };
 
 const createHolidayToDB = async (payload: THoliday, user: JwtPayload) => {
   const start = new Date(payload.startDate);

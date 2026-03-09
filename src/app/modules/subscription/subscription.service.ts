@@ -15,7 +15,9 @@ import config from '../../../config';
 const createStripeCustomerAccountToDB = async (userId: string) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'User not found');
+    return {
+      status: 'USER_NOT_FOUND',
+    } as const;
   }
 
   // if already customer account is exists than return
@@ -46,12 +48,15 @@ const createSubscriptionCheckoutSession = async (
 
   const user = await User.findById(userId);
 
-  if (!user) throw new ApiError(404, 'User not found');
+  if (!user) {
+    return {
+      status: 'USER_NOT_FOUND',
+    } as const;
+  }
   if (user.role !== USER_ROLES.BUSINESS_OWNER)
-    throw new ApiError(
-      StatusCodes.FORBIDDEN,
-      'Only business owners can purchase subscription',
-    );
+    return {
+      status: 'ONLY_BUSINESS_OWNERS_CAN_PURCHASE_SUBSCRIPTION',
+    } as const;
   // check for existing active subscription
   const existingSub = await Subscription.findOne({
     userId,
@@ -59,17 +64,21 @@ const createSubscriptionCheckoutSession = async (
   });
 
   if (existingSub) {
-    throw new ApiError(
-      409,
-      'You already have an active subscription. Please cancel it before purchasing a new one.',
-    );
+    return {
+      status: 'YOU_ALREADY_HAVE_AN_ACTIVE_SUBSCRIPTION',
+    } as const;
   }
 
   const pkg = await Package.findOne({ _id: packageId });
-  if (!pkg) throw new ApiError(StatusCodes.NOT_FOUND, 'Package not found');
+  if (!pkg) {
+    return {
+      status: 'PACKAGE_NOT_FOUND',
+    } as const;
+  }
   const finalTotalEmployees = totalEmployees || 0;
   const stripeCustomerId = await createStripeCustomerAccountToDB(userId);
-  const session = await stripe.checkout.sessions.create({
+  // @ts-ignore
+  const session: any = await stripe.checkout.sessions.create({
     mode: 'subscription',
     customer: stripeCustomerId,
     line_items: [
@@ -133,7 +142,6 @@ const cancelSubscriptionToDB = async (userId: string) => {
 export const expireSubscriptionsJob = new CronJob(
   '* * * * *', // Time: 12:00 UTC
   async () => {
-
     const now = new Date().toISOString();
 
     const expiredSubscriptions = await Subscription.find({
@@ -167,7 +175,8 @@ export const expireSubscriptionsJob = new CronJob(
         `✅ ${expiredUserIds.length} subscription expired and access removed.`,
       );
     } else {
-      ('⏳ No expired subscriptions found today.'); console.log
+      ('⏳ No expired subscriptions found today.');
+      console.log;
     }
   },
   null,
@@ -196,7 +205,6 @@ export const updateRemainingDaysJob = new CronJob(
         },
       };
     });
-
   },
   null,
   false,
@@ -205,21 +213,29 @@ export const updateRemainingDaysJob = new CronJob(
 
 updateRemainingDaysJob.start();
 
-
-const subscriptionDetailsFromDB = async (user: JwtPayload): Promise<{ subscription: TSubscription | {} }> => {
-
-  const subscription = await Subscription.findOne({ userId: user.id }).populate("packageId", "title").lean();
+const subscriptionDetailsFromDB = async (
+  user: JwtPayload,
+): Promise<{ subscription: TSubscription | {} }> => {
+  const subscription = await Subscription.findOne({ userId: user.id })
+    .populate('packageId', 'title')
+    .lean();
   if (!subscription) {
     return { subscription: {} }; // Return empty object if no subscription found
   }
 
-  const subscriptionFromStripe = await stripe.subscriptions.retrieve(subscription.subscriptionId);
+  const subscriptionFromStripe = await stripe.subscriptions.retrieve(
+    subscription.subscriptionId,
+  );
 
   // Check subscription status and update database accordingly
-  if (subscriptionFromStripe?.status !== "active") {
+  if (subscriptionFromStripe?.status !== 'active') {
     await Promise.all([
       User.findByIdAndUpdate(user.id, { isSubscribed: false }, { new: true }),
-      Subscription.findOneAndUpdate({ userId: user.id }, { status: "expired" }, { new: true }),
+      Subscription.findOneAndUpdate(
+        { userId: user.id },
+        { status: 'expired' },
+        { new: true },
+      ),
     ]);
   }
 
@@ -239,5 +255,5 @@ export const SubscriptionServices = {
   handleGetBillingPortalSession,
   cancelSubscriptionToDB,
   getRemainingSubscriptionFromDB,
-  subscriptionDetailsFromDB
+  subscriptionDetailsFromDB,
 };

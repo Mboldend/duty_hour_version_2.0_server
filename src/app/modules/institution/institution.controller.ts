@@ -1,28 +1,26 @@
+import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { InstitutionServices } from './institution.service';
 
 const createInstitution = catchAsync(async (req, res) => {
-  const { ...institutionData } = req.body;
-  const user = req.user;
+  const result = await InstitutionServices.createInstitutionToDB(
+    req.body,
+    req.user,
+  );
 
-  let image = '';
-  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-  const logo = files?.logo?.[0];
-  if (logo) {
-    image = `/uploads/logo/${logo.filename}`;
+  if (result.status === 'FAILED') {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Failed to create institution',
+      data: result,
+    });
+    return;
   }
-
-  const data = {
-    ...institutionData,
-    logo: image,
-  };
-
-  const result = await InstitutionServices.createInstitutionToDB(data, user);
-
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.CREATED,
     message: 'Institution created successfully',
     data: result,
   });
@@ -37,7 +35,7 @@ const getInstitution = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Institution data are retrieved successfully',
     data: result,
   });
@@ -53,8 +51,8 @@ const getInstitutionById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
-    message: 'Institutioin data is retrieved successfully',
+    statusCode: StatusCodes.OK,
+    message: 'Institution data is retrieved successfully',
     data: result,
   });
 });
@@ -67,7 +65,7 @@ const getInstitutionByIdForSuperAdmin = catchAsync(async (req, res) => {
     );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Institution is retrieved successfully',
     data: result,
   });
@@ -82,74 +80,62 @@ const updateInstitutionStatusByIdForSuperAdmin = catchAsync(
         institutionID,
         status,
       );
+    if (result.status === 'FAILED') {
+      sendResponse(res, {
+        success: false,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: 'Failed to update institution status',
+        data: result,
+      });
+      return;
+    }
     sendResponse(res, {
       success: true,
-      statusCode: 200,
-      message: 'Instution status is updated successfully',
+      statusCode: StatusCodes.OK,
+      message: 'Institution status is updated successfully',
       data: result,
     });
   },
 );
 
 const updateInstitutionById = catchAsync(async (req, res) => {
-  const user = req.user;
-  const { ...updatedPayload } = req.body;
-  const { institutionID } = req.params;
-
-  let image = '';
-  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-  const logo = files?.logo?.[0];
-  if (logo) {
-    image = `/uploads/logo/${logo.filename}`;
-  }
-
-  const updatedData = {
-    ...updatedPayload,
-    logo: image,
-  };
-
   const result = await InstitutionServices.updateInstitutionByIdToDB(
-    user,
-    institutionID,
-    updatedData,
+    req.user,
+    req.params.institutionID,
+    req.body,
   );
 
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Institution is updated successfully',
     data: result,
   });
 });
 
 const updateInstitutionStatusById = catchAsync(async (req, res) => {
-  const user = req.user;
-  const { institutionID } = req.params;
-  const { status } = req.body;
   const result = await InstitutionServices.updateInstitutionStatusByIdToDB(
-    user,
-    institutionID,
-    status,
+    req.user,
+    req.params.institutionID,
+    req.body.status,
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Institution status update successfully',
     data: result,
   });
 });
 
 const deleteInstitutionById = catchAsync(async (req, res) => {
-  const user = req.user;
-  const { institutionID } = req.params;
   const result = await InstitutionServices.deleteInstitutionByIdFromDB(
-    user,
-    institutionID,
+    req.user,
+    req.params.institutionID,
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
-    message: 'Institution is deleted succesfully',
+    statusCode: StatusCodes.OK,
+    message: 'Institution is deleted successfully',
     data: result,
   });
 });

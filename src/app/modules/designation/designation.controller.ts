@@ -4,13 +4,12 @@ import sendResponse from '../../../shared/sendResponse';
 import { DesignationServices } from './designation.service';
 
 const createDesignation = catchAsync(async (req, res) => {
-  const roleData = req.body;
-  const user = req.user;
   const result = await DesignationServices.createDesignationToDB(
-    roleData,
-    user,
+    req.body,
+    req.user,
   );
-  if (result.status === "INSTITUTION_NOT_FOUND") {
+
+  if (result.status === 'INSTITUTION_NOT_FOUND') {
     sendResponse(res, {
       success: false,
       statusCode: StatusCodes.NOT_FOUND,
@@ -19,7 +18,7 @@ const createDesignation = catchAsync(async (req, res) => {
     });
     return;
   }
-  if (result.status === "DEPARTMENT_NOT_FOUND") {
+  if (result.status === 'DEPARTMENT_NOT_FOUND') {
     sendResponse(res, {
       success: false,
       statusCode: StatusCodes.NOT_FOUND,
@@ -28,7 +27,7 @@ const createDesignation = catchAsync(async (req, res) => {
     });
     return;
   }
-  if (result.status === "FAILED") {
+  if (result.status === 'FAILED') {
     sendResponse(res, {
       success: false,
       statusCode: StatusCodes.BAD_REQUEST,
@@ -39,7 +38,7 @@ const createDesignation = catchAsync(async (req, res) => {
   }
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: StatusCodes.CREATED,
     success: true,
     message: 'Designation created successfully',
     data: result,
@@ -51,7 +50,7 @@ const getAllDesignation = catchAsync(async (req, res) => {
   const result = await DesignationServices.getDesignationsFromDB(id, req.query);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     success: true,
     message: 'Designation retrieved successfully',
     data: result,
@@ -67,7 +66,7 @@ const getDesignationById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Designation data is retrieved successfully',
     data: result,
   });
@@ -84,7 +83,7 @@ const updateDesignationById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Designation data is updated successfully',
     data: result,
   });
@@ -101,7 +100,7 @@ const updateDesignationStatusById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Designation status is updated successfully',
     data: result,
   });
@@ -116,7 +115,7 @@ const deleteDesignationById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Designation is deleted successfully',
     data: result,
   });

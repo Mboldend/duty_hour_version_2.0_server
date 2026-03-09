@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { STATUS } from '../../../shared/constant';
 
-export type TDesignaton = {
+export type TDesignation = {
   designationName: string;
   institutionID: Types.ObjectId;
   departmentID: Types.ObjectId;

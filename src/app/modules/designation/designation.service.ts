@@ -3,7 +3,7 @@ import ApiError from '../../../errors/ApiError';
 import { STATUS } from '../../../shared/constant';
 import { JwtPayload } from 'jsonwebtoken';
 import { User } from '../user/user.model';
-import { TDesignaton } from './designation.interface';
+import { TDesignation } from './designation.interface';
 import { Designation } from './designation.model';
 import { getAllUserIdsUnderRootOwner } from '../../../util/getAllUserIdsUnderRootOwner';
 import QueryBuilder from '../../builder/QueryBuilder';
@@ -11,7 +11,7 @@ import { Institution } from '../institution/institution.model';
 import { Department } from '../department/department.model';
 
 const createDesignationToDB = async (
-  payload: TDesignaton,
+  payload: TDesignation,
   user: JwtPayload,
 ) => {
   payload.createdBy = user.id;
@@ -117,7 +117,7 @@ const getDesignationByIdFromDB = async (userId: string, holidayID: string) => {
 const updateDesignationByIdToDB = async (
   userId: string,
   designationID: string,
-  updatedPayload: Partial<TDesignaton>,
+  updatedPayload: Partial<TDesignation>,
 ) => {
   // get the requesting user's role
   const requestingUser = await User.findById(userId).select('createdBy role');

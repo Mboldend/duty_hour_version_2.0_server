@@ -19,7 +19,7 @@ import { User } from '../user/user.model';
 import { STATUS } from '../../../shared/constant';
 
 const loginUserFromDB = async (payload: ILoginData) => {
-  const { email, password, role } = payload; // role টা payload থেকে নাও
+  const { email, password, role } = payload;
 
   const isExistUser = await User.findOne({ email }).select('+password');
   if (!isExistUser) {
