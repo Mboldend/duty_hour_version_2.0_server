@@ -22,10 +22,10 @@ const createInstitutionToDB = async (
   payload.owner = isUserExists.id;
 
   const result = await Institution.create(payload);
-
   if (!result) {
-    unlinkFile(payload.logo);
-    throw new ApiError(400, 'Failed to create institution');
+    return {
+      status: 'FAILED' as const,
+    };
   }
 
   return result;
@@ -53,11 +53,10 @@ const getInstitutionsFromDB = async (
 
     const allUserIds = await getAllUserIdsUnderRootOwner(rootOwnerId);
 
-    baseQuery = Institution.find({ owner: { $in: allUserIds } }); 
+    baseQuery = Institution.find({ owner: { $in: allUserIds } });
   } else {
     throw new ApiError(StatusCodes.FORBIDDEN, 'Access denied');
   }
-
 
   const queryBuilder = new QueryBuilder(baseQuery, query)
     .sort()
@@ -179,15 +178,17 @@ const updateInstitutionStatusByIdForSuperAdminToDB = async (
   id: string,
   status: STATUS.ACTIVE | STATUS.INACTIVE,
 ) => {
-  const institution = await Institution.findByIdAndUpdate(
+  const result = await Institution.findByIdAndUpdate(
     id,
     { status },
     { new: true },
   );
-  if (!institution) {
-    throw new ApiError(400, 'Failed to update institution status');
+  if (!result) {
+    return {
+      status: 'FAILED' as const,
+    };
   }
-  return institution;
+  return result;
 };
 
 const updateInstitutionByIdToDB = async (

@@ -66,7 +66,7 @@ export const createSubscriptionProduct = async (payload: Partial<IPackage>): Pro
             priceId: price.id,
         },
     });
-
+    
 
 
     if (!paymentLink.url) {

@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/ApiError';
 import { Department } from '../department/department.model';
 import { Institution } from '../institution/institution.model';
@@ -6,33 +7,38 @@ import { SHIFT_STATUS } from '../user/user.constant';
 import { User } from '../user/user.model';
 
 const createAssignShiftToDB = async (payload: any) => {
-  const institution = await Institution.findById(payload.institutionID);
-  if (!institution)
-    throw new ApiError(404, 'No institution found in the database');
-
-  const department = await Department.findById(payload.departmentID);
-  if (!department)
-    throw new ApiError(404, 'No department found in the database');
-
+  const { institutionID, departmentID, employeeID } = payload;
+  if (!institutionID || !departmentID || !employeeID) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid payload');
+  }
   const employee = await User.findOne({
-    institutionID: payload.institutionID,
-    departmentID: payload.departmentID,
-    employeeID: payload.employeeID,
+    institutionID,
+    departmentID,
+    employeeID,
   });
 
   if (!employee)
-    throw new ApiError(404, 'No employee found with given information');
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      'No employee found with given information',
+    );
 
   // prevent duplicate shift assignment
   if (
     employee.shiftStatus === SHIFT_STATUS.ASSIGNED &&
     employee.shiftSchedule
   ) {
-    throw new ApiError(409, 'This employee is already assigned to a shift');
+    return {
+      status: 'EMPLOYEE_ALREADY_ASSIGNED_TO_A_SHIFT',
+    } as const;
   }
 
   const shift = await Shift.findById(payload.shiftID);
-  if (!shift) throw new ApiError(404, 'No shift found in the database');
+  if (!shift) {
+    return {
+      status: 'SHIFT_NOT_FOUND',
+    } as const;
+  }
 
   const updatedPayload = {
     shiftSchedule: payload.shiftID,
@@ -61,7 +67,10 @@ const updateAssignedShiftToDB = async (payload: any) => {
   });
 
   if (!employee) {
-    throw new ApiError(404, 'Employee not found with the provided information');
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      'Employee not found with the provided information',
+    );
   }
 
   // check if the employee already has a shift assigned
@@ -69,18 +78,27 @@ const updateAssignedShiftToDB = async (payload: any) => {
     employee.shiftStatus !== SHIFT_STATUS.ASSIGNED ||
     !employee.shiftSchedule
   ) {
-    throw new ApiError(400, 'This employee does not have any shift assigned');
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      'This employee does not have any shift assigned',
+    );
   }
 
   // find the new shift to assign
   const newShift = await Shift.findById(shiftID);
   if (!newShift) {
-    throw new ApiError(404, 'Shift not found in the database');
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      'Shift not found in the database',
+    );
   }
 
   // prevent updating with the same shift
   if (employee.shiftSchedule.toString() === shiftID) {
-    throw new ApiError(409, 'This shift is already assigned to the employee');
+    throw new ApiError(
+      StatusCodes.CONFLICT,
+      'This shift is already assigned to the employee',
+    );
   }
 
   // update the employee's shift

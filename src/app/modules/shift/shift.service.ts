@@ -48,7 +48,9 @@ const createShiftToDB = async (payload: any, user: JwtPayload) => {
 
   const result = await Shift.create(finalPayload);
   if (!result) {
-    throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create shift');
+    return {
+      status: 'SHIFT_CREATION_FAILED',
+    } as const;
   }
 
   return result;
@@ -76,10 +78,9 @@ const getShiftByIdFromDB = async (userId: string, shiftID: string) => {
   }).populate({ path: 'createdBy', select: 'name email profileImage role' });
 
   if (!shift) {
-    throw new ApiError(
-      StatusCodes.NOT_FOUND,
-      'Shift not found or access denied',
-    );
+    return {
+      status: 'SHIFT_NOT_FOUND',
+    } as const;
   }
 
   return shift;

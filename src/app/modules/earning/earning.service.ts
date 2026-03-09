@@ -3,37 +3,23 @@ import { Subscription } from '../subscription/subscription.model';
 
 const getTotalEarningsFromDB = async (query: Record<string, any>) => {
   const searchableFields = ['userId.email', 'trxId'];
-
-  // setup QueryBuilder with base query
-  const queryBuilder = new QueryBuilder(
-    Subscription.find().populate([
-      {
-        path: 'userId',
-        select: 'name email phone role profileImage status',
-      },
-      {
-        path: 'packageId',
-        select:
-          'planName isUnionized billingCycle currency discount discountValue pricePerEmployee',
-      },
-    ]),
-    query,
-  );
-
-  const finalQuery = queryBuilder
+  const qb = new QueryBuilder(Subscription.find(), query)
     .search(searchableFields)
     .filter()
     .sort()
     .paginate()
-    .fields();
+    .fields()
+    .populate(["userId", "packageId"], {
+      userId: "name email phone role profileImage status",
+      packageId: "planName isUnionized billingCycle currency discount discountValue pricePerEmployee",
+    });
 
-  const subscriptions = await finalQuery.modelQuery;
-  const meta = await queryBuilder.getPaginationInfo();
+  const [data, meta] = await Promise.all([
+    qb.modelQuery.exec(),
+    qb.getPaginationInfo(),
+  ]);
 
-  return {
-    meta,
-    data: subscriptions,
-  };
+  return { data: data ?? [], meta };
 };
 
 export const EarningServices = {

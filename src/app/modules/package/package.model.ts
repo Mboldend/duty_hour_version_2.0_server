@@ -2,9 +2,6 @@ import { model, Schema } from 'mongoose';
 import { IPackage } from './package.interface';
 import {
   BILLING_CYCLE,
-  CURRENCY,
-  DISCOUNT_TYPE,
-  PLAN_NAME,
 } from './package.constant';
 
 const packageSchema = new Schema<IPackage>(

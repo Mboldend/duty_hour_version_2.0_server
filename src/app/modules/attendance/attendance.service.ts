@@ -19,6 +19,7 @@ import {
 import QueryBuilder from '../../builder/QueryBuilder';
 import dayjs from 'dayjs';
 import { STATUS as ACTIVE_STATUS } from '../../../shared/constant';
+import { StatusCodes } from 'http-status-codes';
 
 const checkIn = async (userID: string, payload: any) => {
   const { wifiIPAddress, wifiSSID, latitude, longitude } = payload;
@@ -45,12 +46,12 @@ const checkIn = async (userID: string, payload: any) => {
     institutionID: user.institutionID,
   });
   if (!location)
-    throw new ApiError(404, 'No location configured for this institution');
+    throw new ApiError(StatusCodes.NOT_FOUND, 'No location configured for this institution');
 
   // validate WiFi credentials
   if (location.wifiIPAddress !== wifiIPAddress) {
     throw new ApiError(
-      400,
+      StatusCodes.BAD_REQUEST,
       'Invalid WiFi credentials. Please connect to the correct network.',
     );
   }
@@ -70,7 +71,7 @@ const checkIn = async (userID: string, payload: any) => {
       location.longitude,
     );
     if (distance > location.radius)
-      throw new ApiError(400, 'Outside allowed GPS radius');
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Outside allowed GPS radius');
   }
 
   // holiday check
@@ -113,7 +114,7 @@ const checkIn = async (userID: string, payload: any) => {
     : await Shift.findById(user.shiftSchedule);
 
   if (!shiftToUse) {
-    throw new ApiError(404, 'No valid shift found');
+    throw new ApiError(StatusCodes.NOT_FOUND, 'No valid shift found');
   }
 
   // weekend check
@@ -155,7 +156,7 @@ const checkIn = async (userID: string, payload: any) => {
   else if (isVacationApproved) status = STATUS.LEAVE;
   else if (isWeekend) status = STATUS.OFFDAY;
   else {
-    if (!isInsideShift) throw new ApiError(400, 'Not within shift hours');
+    if (!isInsideShift) throw new ApiError(StatusCodes.BAD_REQUEST, 'Not within shift hours');
     status = isLate ? STATUS.LATE : STATUS.PRESENT;
   }
 

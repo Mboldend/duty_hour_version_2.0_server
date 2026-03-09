@@ -19,7 +19,9 @@ const createShiftAndLeaveRequestToDB = async (
   const user = await User.findById(userId);
 
   if (!user) {
-    throw new ApiError(404, 'No User is found in the database');
+    return {
+      status: 'USER_NOT_FOUND',
+    } as const;
   }
 
   payload.userID = user._id;
@@ -63,14 +65,15 @@ const createShiftAndLeaveRequestToDB = async (
     });
 
     if (overlappingVacation) {
-      throw new ApiError(
-        400,
-        'You already have a vacation request overlapping this date range.',
-      );
+      return {
+        status: 'VACATION_REQUEST_OVERLAPPING',
+      } as const;
     }
   } else if (payload.requestType === REQUEST_TYPE.SHIFT_CHANGE) {
     if (!payload.requestedDate || !payload.requestedShiftID) {
-      throw new ApiError(400, 'Requested shift ID and date are required');
+      return {
+        status: 'REQUESTED_SHIFT_ID_AND_DATE_REQUIRED',
+      } as const;
     }
 
     payload.requestedDate = toUTCISOString(payload.requestedDate);
@@ -83,19 +86,22 @@ const createShiftAndLeaveRequestToDB = async (
     });
 
     if (existingShiftChange) {
-      throw new ApiError(
-        400,
-        'You already have a shift change request on this date.',
-      );
+      return {
+        status: 'SHIFT_CHANGE_REQUEST_OVERLAPPING',
+      } as const;
     }
   } else {
-    throw new ApiError(400, 'Invalid request type');
+    return {
+      status: 'INVALID_REQUEST_TYPE',
+    } as const;
   }
 
   const result = await ShiftAndLeaveRequest.create(payload);
 
   if (!result) {
-    throw new ApiError(400, 'Failed to create shift and leave request');
+    return {
+      status: 'FAILED_TO_CREATE_SHIFT_AND_LEAVE_REQUEST',
+    } as const;
   }
 
   // ================== SEND NOTIFICATION TO ALL HR UNDER ROOT OWNER ==================

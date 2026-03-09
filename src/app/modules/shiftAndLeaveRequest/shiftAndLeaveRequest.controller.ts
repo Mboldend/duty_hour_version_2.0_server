@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import { ShiftAndLeaveRequestServices } from './shiftAndLeaveRequest.service';
@@ -10,9 +11,57 @@ const createShiftAndLeaveRequest = catchAsync(async (req, res) => {
       shiftAndLeaveData,
       id,
     );
+  if (result?.status === 'USER_NOT_FOUND') {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.NOT_FOUND,
+      message: 'User not found',
+    });
+    return;
+  }
+  if (result?.status === 'VACATION_REQUEST_OVERLAPPING') {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Vacation request overlapping',
+    });
+    return;
+  }
+  if (result?.status === 'REQUESTED_SHIFT_ID_AND_DATE_REQUIRED') {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Requested shift ID and date required',
+    });
+    return;
+  }
+  if (result?.status === 'SHIFT_CHANGE_REQUEST_OVERLAPPING') {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Shift change request overlapping',
+    });
+    return;
+  }
+  if (result?.status === 'INVALID_REQUEST_TYPE') {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Invalid request type',
+    });
+    return;
+  }
+  if (result?.status === 'FAILED_TO_CREATE_SHIFT_AND_LEAVE_REQUEST') {
+    sendResponse(res, {
+      success: false,
+      statusCode: StatusCodes.BAD_REQUEST,
+      message: 'Failed to create shift and leave request',
+    });
+    return;
+  }
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.CREATED,
     message: 'Shift and leave request is created successfully',
     data: result,
   });
@@ -27,7 +76,7 @@ const getShiftAndLeaveRequests = catchAsync(async (req, res) => {
     );
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     success: true,
     message: 'Shift and live requests are retrieved successfully',
     data: result,
@@ -35,34 +84,30 @@ const getShiftAndLeaveRequests = catchAsync(async (req, res) => {
 });
 
 const getShiftAndLeaveRequestById = catchAsync(async (req, res) => {
-  const { id } = req.user;
-  const { shiftAndLeaveRequestID } = req.params;
   const result =
     await ShiftAndLeaveRequestServices.getShiftAndLeaveRequestByIdFromDB(
-      id,
-      shiftAndLeaveRequestID,
+      req.user.id!,
+      req.params.shiftAndLeaveRequestID,
     );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Shift and leave request data is retrieved successfully',
     data: result,
   });
 });
 
 const updateShiftAndLeaveRequestStatusById = catchAsync(async (req, res) => {
-  const { id } = req.user;
-  const { shiftAndLeaveRequestID } = req.params;
-  const { status } = req.body;
+
   const result =
     await ShiftAndLeaveRequestServices.updateShiftAndLeaveRequestStatusByIdToDB(
-      id,
-      shiftAndLeaveRequestID,
-      status,
+      req.user.id!,
+      req.params.shiftAndLeaveRequestID,
+      req.body.status,
     );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Shift and leave request status is updated successfully',
     data: result,
   });
@@ -70,16 +115,14 @@ const updateShiftAndLeaveRequestStatusById = catchAsync(async (req, res) => {
 
 const updateMultipleShiftAndLeaveRequestStatuses = catchAsync(
   async (req, res) => {
-    const { id } = req.user;
-    const updatedData = req.body;
     const result =
       await ShiftAndLeaveRequestServices.updateMultipleShiftAndLeaveRequestStatusesToDB(
-        id,
-        updatedData,
+        req.user.id!,
+        req.body,
       );
     sendResponse(res, {
       success: true,
-      statusCode: 200,
+      statusCode: StatusCodes.OK,
       message:
         'Multiple shift and leave request statuses are updated successfully',
       data: result,
@@ -88,24 +131,22 @@ const updateMultipleShiftAndLeaveRequestStatuses = catchAsync(
 );
 
 const getOwnShiftRequests = catchAsync(async (req, res) => {
-  const { id } = req.user;
   const result =
-    await ShiftAndLeaveRequestServices.getOwnShiftRequestsFromDB(id);
+    await ShiftAndLeaveRequestServices.getOwnShiftRequestsFromDB(req.user.id!);
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Shift request data are retrieved successfully',
     data: result,
   });
 });
 
 const getOwnLeaveRequests = catchAsync(async (req, res) => {
-  const { id } = req.user;
   const result =
-    await ShiftAndLeaveRequestServices.getOwnLeaveRequestsFromDB(id);
+    await ShiftAndLeaveRequestServices.getOwnLeaveRequestsFromDB(req.user.id!);
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Leave request data are retrieved successfully',
     data: result,
   });

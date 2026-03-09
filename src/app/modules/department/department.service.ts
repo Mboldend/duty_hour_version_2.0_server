@@ -18,97 +18,16 @@ const createDepartmentToDB = async (payload: IDepartment, user: JwtPayload) => {
       status: "NOT_FOUND",
     } as const;
   }
-  const department = await Department.create(payload);
+  const result = await Department.create(payload);
 
-  if (!department) {
+  if (!result) {
     return {
       status: "FAILED",
     } as const;
   }
 
-  return department;
+  return result;
 };
-
-// const getDepartmentsFromDB = async (userId: string, query: any) => {
-//   // trace root owner
-//   let currentUser = await User.findById(userId).select('createdBy');
-//   let rootOwnerId = userId;
-
-//   while (currentUser?.createdBy) {
-//     rootOwnerId = currentUser.createdBy.toString();
-//     currentUser = await User.findById(currentUser.createdBy).select(
-//       'createdBy',
-//     );
-//   }
-
-//   // get all userIds under root owner
-//   const allUserIds = await getAllUserIdsUnderRootOwner(rootOwnerId);
-
-//   // build base query
-//   const baseQuery = Department.find({ createdBy: { $in: allUserIds } });
-
-//   // apply QueryBuilder chain
-//   const queryBuilder = new QueryBuilder(baseQuery, query)
-//     .sort()
-//     .paginate()
-//     .fields()
-//     .populate(['createdBy', 'institutionID'], {
-//       createdBy: 'name email profileImage role',
-//       institutionID: 'institutionName logo',
-//     });
-
-//   // apply nested populate (owner inside institution)
-//   queryBuilder.modelQuery = queryBuilder.modelQuery.populate({
-//     path: 'institutionID.owner',
-//     select: 'name email role profileImage',
-//   });
-
-//   const departments = await queryBuilder.modelQuery;
-//   const pagination = await queryBuilder.getPaginationInfo();
-
-//   // get department IDs
-//   const departmentIds = departments.map((dept: any) => dept._id);
-
-//   // aggregate employee count for each department
-//   const employeeCounts = await User.aggregate([
-//     {
-//       $match: {
-//         departmentID: { $in: departmentIds },
-//         status: STATUS.ACTIVE,
-//       },
-//     },
-//     {
-//       $group: {
-//         _id: '$departmentID',
-//         total: { $sum: 1 },
-//       },
-//     },
-//   ]);
-
-//   const countMap = new Map(
-//     employeeCounts.map(item => [item._id.toString(), item.total]),
-//   );
-
-//   // bulk update totalEmployee field
-//   const bulkOps = departments.map((dept: any) => {
-//     const count = countMap.get(dept._id.toString()) || 0;
-//     return {
-//       updateOne: {
-//         filter: { _id: dept._id },
-//         update: { totalEmployee: count },
-//       },
-//     };
-//   });
-
-//   if (bulkOps.length > 0) {
-//     await Department.bulkWrite(bulkOps);
-//   }
-
-//   return {
-//     data: departments.map((dept: any) => dept.toObject()),
-//     meta: pagination,
-//   };
-// };
 
 const getDepartmentsFromDB = async (userId: JwtPayload, query: Record<string, any>) => {
   const qb = new QueryBuilder(Department.find({ createdBy: userId.id }), query).sort()
@@ -119,7 +38,7 @@ const getDepartmentsFromDB = async (userId: JwtPayload, query: Record<string, an
       institutionID: 'institutionName logo',
     });
   const [data, meta] = await Promise.all([
-    qb.modelQuery.exec(),
+    qb.modelQuery.lean(),
     qb.getPaginationInfo(),
   ]);
   return {

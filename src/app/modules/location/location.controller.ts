@@ -10,7 +10,7 @@ const createLocation = catchAsync(async (req: Request, res: Response) => {
   const result = await LocationServices.createLocation(locationData, user);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: StatusCodes.CREATED,
     success: true,
     message: 'Location created successfully',
     data: result,
@@ -35,7 +35,7 @@ const getLocationById = catchAsync(async (req, res) => {
   const result = await LocationServices.getLocationByIdFromDB(id, locationID);
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Location data is retrieved successfully',
     data: result,
   });
@@ -52,7 +52,7 @@ const updateLocationById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Location data is updated successfully',
     data: result,
   });
@@ -69,7 +69,7 @@ const updateLocationStatusById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Location status is updated successfully',
     data: result,
   });
@@ -84,7 +84,7 @@ const deleteLocationById = catchAsync(async (req, res) => {
   );
   sendResponse(res, {
     success: true,
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     message: 'Location is deleted successfully',
     data: result,
   });

@@ -51,17 +51,6 @@ const sendNotifyBusinessOwners = catchAsync(async (req, res) => {
   });
 });
 
-// const getNotifyBusinessOwners = catchAsync(async (req, res) => {
-//   const user = req.user;
-//   const result = await NotificationService.getNotifyBusinessOwnersFromDB(user);
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: 200,
-//     message: 'Notify business owners are retrieved successfully',
-//     data: result,
-//   });
-// });
-
 const getBusinessOwnerNotifications = catchAsync(async (req, res) => {
   const user = req.user;
   const result =
