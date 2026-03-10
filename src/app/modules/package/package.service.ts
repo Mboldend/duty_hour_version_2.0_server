@@ -12,30 +12,38 @@ import QueryBuilder from '../../builder/QueryBuilder';
 const CreatePackageToDB = async (user: JwtPayload, payload: IPackage) => {
   payload.isAdmin = user.id;
 
-  const isAdmin = await User.findById(user.id).lean().exec()
+  const isAdmin = await User.findById(user.id).lean().exec();
   if (!isAdmin) {
-    return { status: "FAILED" as const, message: "Unauthorized Access" }
-  };
+    return { status: 'FAILED' as const, message: 'Unauthorized Access' };
+  }
   const packageLinkCreate = await createSubscriptionProduct({
     planName: payload.planName,
     price: payload.price,
     billingCycle: payload.billingCycle,
-  })
+  });
   if (packageLinkCreate) {
-    payload.paymentLink = packageLinkCreate.paymentLink
-    payload.stripeProductId = packageLinkCreate.productId
-    payload.stripePriceId = packageLinkCreate.priceId
+    payload.paymentLink = packageLinkCreate.paymentLink;
+    payload.stripeProductId = packageLinkCreate.productId;
+    payload.stripePriceId = packageLinkCreate.priceId;
   }
   const result = await Package.create(payload);
 
   if (!result) {
-    return { status: "FAILED" as const }
+    return { status: 'FAILED' as const };
   }
   return result;
 };
 
-const getPackagesFromDB = async (query: Record<string, any>, user: JwtPayload) => {
-  const qb = new QueryBuilder<IPackage>(Package.find(), query).sort().paginate().fields().search(['planName']).filter();
+const getPackagesFromDB = async (
+  query: Record<string, any>,
+  user: JwtPayload,
+) => {
+  const qb = new QueryBuilder<IPackage>(Package.find(), query)
+    .sort()
+    .paginate()
+    .fields()
+    .search(['planName'])
+    .filter();
   const [data, meta, currentUser] = await Promise.all([
     qb.modelQuery.exec(),
     qb.getPaginationInfo(),
@@ -73,8 +81,6 @@ const getPackageByIdFromDB = async (id: string) => {
   return result;
 };
 
-
-
 const deletePackageByIdFromDB = async (id: string) => {
   const existing = await Package.findById(id);
   if (!existing) {
@@ -87,7 +93,6 @@ const deletePackageByIdFromDB = async (id: string) => {
       const prices = await stripe.prices.list({
         product: existing.stripeProductId,
       });
-
 
       for (const price of prices.data) {
         if (price.active) {

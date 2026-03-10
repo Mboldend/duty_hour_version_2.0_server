@@ -36,4 +36,7 @@ const designationSchema = new Schema<TDesignation>(
   },
 );
 
-export const Designation = model<TDesignation>('Designation', designationSchema);
+export const Designation = model<TDesignation>(
+  'Designation',
+  designationSchema,
+);

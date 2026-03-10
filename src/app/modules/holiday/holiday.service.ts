@@ -9,7 +9,6 @@ import { getAllUserIdsUnderRootOwner } from '../../../util/getAllUserIdsUnderRoo
 import { STATUS } from '../../../shared/constant';
 import QueryBuilder from '../../builder/QueryBuilder';
 
-
 const createHolidayToDB = async (payload: THoliday, user: JwtPayload) => {
   const start = new Date(payload.startDate);
   const end = new Date(payload.endDate);
@@ -38,7 +37,6 @@ const createHolidayToDB = async (payload: THoliday, user: JwtPayload) => {
       'Holiday already exists in this date range',
     );
   }
-
 
   const totalDays = differenceInCalendarDays(end, start) + 1;
   payload.startDate = startISO;

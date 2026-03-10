@@ -1,180 +1,188 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Account Process - The Duty Hour App</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delete Account Process - The Duty Hour App</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 0;
-      color: #333;
-      line-height: 1.7;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 60px auto;
-      padding: 40px 30px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      opacity: 0;
-      transform: translateY(40px);
-      animation: fadeInUp 1s ease-out forwards;
-    }
-
-    h1 {
-      text-align: center;
-      color: #3c7c89;
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 30px;
-      animation: slideIn 1s ease-out forwards;
-    }
-
-    ol {
-      padding-left: 25px;
-    }
-
-    li {
-      margin-bottom: 24px;
-      font-size: 16px;
-    }
-
-    .highlight {
-      background-color: #d0ebf4;
-      color: #0c5460;
-      padding: 3px 6px;
-      border-radius: 6px;
-      font-weight: 600;
-      display: inline-block;
-      transition: background 0.3s ease, transform 0.3s ease;
-    }
-
-    .highlight:hover {
-      background-color: #b6e0ea;
-      transform: translateY(-2px);
-    }
-
-    .image-container {
-      text-align: center;
-      margin: 14px 0 28px;
-    }
-
-    .image-container img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      animation: fadeIn 1.2s ease-in forwards;
-    }
-
-    .note {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 14px;
-      color: #666;
-      animation: fadeIn 1.4s ease-in forwards;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        transform: translateY(40px);
-        opacity: 0;
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f4f6f8;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        line-height: 1.7;
       }
 
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(-25px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 600px) {
       .container {
-        padding: 25px 20px;
-        margin: 30px 15px;
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 40px 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 1s ease-out forwards;
       }
 
       h1 {
-        font-size: 26px;
+        text-align: center;
+        color: #3c7c89;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 30px;
+        animation: slideIn 1s ease-out forwards;
+      }
+
+      ol {
+        padding-left: 25px;
       }
 
       li {
-        font-size: 15px;
+        margin-bottom: 24px;
+        font-size: 16px;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <div class="container">
-    <h1>How to Delete Your Account</h1>
+      .highlight {
+        background-color: #d0ebf4;
+        color: #0c5460;
+        padding: 3px 6px;
+        border-radius: 6px;
+        font-weight: 600;
+        display: inline-block;
+        transition:
+          background 0.3s ease,
+          transform 0.3s ease;
+      }
 
-    <ol>
-      <li>
-        Open the <span class="highlight">Profile</span> tab.
-        <div class="image-container">
-          <!-- Image: Profile screen -->
-          <img src="https://res.cloudinary.com/dphkhbunv/image/upload/v1759128479/Profile_hw4syl.png" alt="Profile screen with account options" />
-        </div>
-      </li>
+      .highlight:hover {
+        background-color: #b6e0ea;
+        transform: translateY(-2px);
+      }
 
-      <li>
-        Scroll down and tap <span class="highlight">Delete Account</span>.
-        <div class="note">You’ll see a confirmation pop-up asking for your password.</div>
-      </li>
+      .image-container {
+        text-align: center;
+        margin: 14px 0 28px;
+      }
 
-      <li>
-        In the pop-up, enter your <span class="highlight">Password</span> to confirm and tap
-        <span class="highlight">Delete</span>.
-        <div class="image-container">
-          <!-- Image: Delete confirmation modal -->
-          <img src="https://res.cloudinary.com/dphkhbunv/image/upload/v1759128478/Profile_2_xwyjv9.png" alt="Delete Account confirmation modal with password field" />
-        </div>
-      </li>
+      .image-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        animation: fadeIn 1.2s ease-in forwards;
+      }
 
-      <li>
-        Your account will be deleted and you will be signed out automatically.
-        <div class="note">This action is permanent and can’t be undone.</div>
-      </li>
-    </ol>
+      .note {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #666;
+      }
 
-    <footer>&copy; 2025 The Duty Hour App. All rights reserved.</footer>
-  </div>
-</body>
+      footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 14px;
+        color: #666;
+        animation: fadeIn 1.4s ease-in forwards;
+      }
 
+      @keyframes fadeInUp {
+        from {
+          transform: translateY(40px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(-25px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 25px 20px;
+          margin: 30px 15px;
+        }
+
+        h1 {
+          font-size: 26px;
+        }
+
+        li {
+          font-size: 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>How to Delete Your Account</h1>
+
+      <ol>
+        <li>
+          Open the <span class="highlight">Profile</span> tab.
+          <div class="image-container">
+            <!-- Image: Profile screen -->
+            <img
+              src="https://res.cloudinary.com/dphkhbunv/image/upload/v1759128479/Profile_hw4syl.png"
+              alt="Profile screen with account options"
+            />
+          </div>
+        </li>
+
+        <li>
+          Scroll down and tap <span class="highlight">Delete Account</span>.
+          <div class="note">
+            You’ll see a confirmation pop-up asking for your password.
+          </div>
+        </li>
+
+        <li>
+          In the pop-up, enter your <span class="highlight">Password</span> to
+          confirm and tap <span class="highlight">Delete</span>.
+          <div class="image-container">
+            <!-- Image: Delete confirmation modal -->
+            <img
+              src="https://res.cloudinary.com/dphkhbunv/image/upload/v1759128478/Profile_2_xwyjv9.png"
+              alt="Delete Account confirmation modal with password field"
+            />
+          </div>
+        </li>
+
+        <li>
+          Your account will be deleted and you will be signed out automatically.
+          <div class="note">This action is permanent and can’t be undone.</div>
+        </li>
+      </ol>
+
+      <footer>&copy; 2025 The Duty Hour App. All rights reserved.</footer>
+    </div>
+  </body>
 </html>

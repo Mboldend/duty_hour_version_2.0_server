@@ -1,27 +1,5 @@
 import { User } from '../app/modules/user/user.model';
 
-// export const getAllUserIdsUnderRootOwner = async (rootOwnerId: string) => {
-//   const allUserIds = new Set();
-//   const queue = [rootOwnerId];
-
-//   while (queue.length) {
-//     const current = queue.shift();
-//     if (!current) continue;
-
-//     allUserIds.add(current);
-
-//     const children = await User.find({ createdBy: current }).select('_id');
-//     const childIds = children.map(c => c._id.toString());
-
-//     for (const childId of childIds) {
-//       if (!allUserIds.has(childId)) {
-//         queue.push(childId);
-//       }
-//     }
-//   }
-
-//   return Array.from(allUserIds);
-// };
 
 export const getAllUserIdsUnderRootOwner = async (rootOwnerId: string) => {
   // Step 1: Get all users who have a createdBy field (i.e., not root users)

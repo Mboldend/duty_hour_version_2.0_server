@@ -18,22 +18,22 @@ const createDesignationToDB = async (
   const [institution, department] = await Promise.all([
     Institution.findById(payload.institutionID),
     Department.findById(payload.departmentID),
-  ])
+  ]);
   if (!institution) {
     return {
-      status: "INSTITUTION_NOT_FOUND",
+      status: 'INSTITUTION_NOT_FOUND',
     } as const;
   }
   if (!department) {
     return {
-      status: "DEPARTMENT_NOT_FOUND",
+      status: 'DEPARTMENT_NOT_FOUND',
     } as const;
   }
   const designation = await Designation.create(payload);
 
   if (!designation) {
     return {
-      status: "FAILED",
+      status: 'FAILED',
     } as const;
   }
 

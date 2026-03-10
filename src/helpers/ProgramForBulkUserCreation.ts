@@ -46,8 +46,7 @@ export const ProgramForBulkUserCreation = async (
           quantity: 1,
         },
       ],
-      success_url:
-        config.stripe.BULK_EMPLOYEE_CREATION_AFTER_PAYMENT_LINK!,
+      success_url: config.stripe.BULK_EMPLOYEE_CREATION_AFTER_PAYMENT_LINK!,
       cancel_url:
         config.stripe.BULK_EMPLOYEE_CREATION_AFTER_PAYMENT_LINK_Failed!,
       metadata: {
@@ -56,10 +55,9 @@ export const ProgramForBulkUserCreation = async (
         packageName: packageDetails.planName,
         employeeData: JSON.stringify(payload),
         subscriptionId: (subscription as any)._id.toString(),
-        packageType: "program"
+        packageType: 'program',
       },
     });
-
 
     return {
       status: 'PAYMENT_REQUIRED',
@@ -101,13 +99,14 @@ export const ProgramForBulkUserCreation = async (
     {
       $inc: { totalEmployees: -1 },
     },
-    { new: true }
+    { new: true },
   );
 
   return {
     status: 'EMPLOYEE_CREATED',
-    message: `Employee created successfully. Remaining seats: ${remainingEmployees - 1
-      }/${packageLimit}`,
+    message: `Employee created successfully. Remaining seats: ${
+      remainingEmployees - 1
+    }/${packageLimit}`,
     data: newEmployee,
   };
 };

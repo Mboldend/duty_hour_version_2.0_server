@@ -3,7 +3,6 @@ import sendResponse from '../../../shared/sendResponse';
 import { PackageServices } from './package.service';
 
 const createPackage = catchAsync(async (req, res) => {
-
   const result = await PackageServices.CreatePackageToDB(req.user!, req.body);
   sendResponse(res, {
     success: true,
@@ -45,7 +44,6 @@ const getPackageById = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
 
 const deletePackageById = catchAsync(async (req, res) => {
   const { id } = req.params;

@@ -46,14 +46,15 @@ const sendContactMessage = async (data: TContact) => {
             <td style="font-weight: bold;">Email:</td>
             <td><a href="mailto:${data.email}" style="color: #336c79;">${data.email}</a></td>
           </tr>
-          ${data.phone
-      ? `
+          ${
+            data.phone
+              ? `
           <tr>
             <td style="font-weight: bold;">Phone:</td>
             <td>${data.phone}</td>
           </tr>`
-      : ''
-    }
+              : ''
+          }
           <tr>
             <td style="font-weight: bold;">Subject:</td>
             <td>${data.subject}</td>

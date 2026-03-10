@@ -20,7 +20,9 @@ export const handleIndividualSubscriptionCreated = async (
     }
 
     if (!employeeDataStr) {
-      console.error('❌ Missing employeeData in metadata - not an employee purchase');
+      console.error(
+        '❌ Missing employeeData in metadata - not an employee purchase',
+      );
       return;
     }
 
@@ -67,7 +69,8 @@ export const handleIndividualSubscriptionCreated = async (
       const template = emailTemplate.employeeEmailTemplate({
         name: newEmployee.name,
         email: newEmployee.email!,
-        password: (employeeData as { password?: string }).password || '12345678',
+        password:
+          (employeeData as { password?: string }).password || '12345678',
       });
       await emailHelper.sendEmail(template);
       console.log('✅ Email sent to:', newEmployee.email);

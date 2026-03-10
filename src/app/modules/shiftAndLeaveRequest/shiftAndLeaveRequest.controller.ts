@@ -98,7 +98,6 @@ const getShiftAndLeaveRequestById = catchAsync(async (req, res) => {
 });
 
 const updateShiftAndLeaveRequestStatusById = catchAsync(async (req, res) => {
-
   const result =
     await ShiftAndLeaveRequestServices.updateShiftAndLeaveRequestStatusByIdToDB(
       req.user.id!,
@@ -131,8 +130,9 @@ const updateMultipleShiftAndLeaveRequestStatuses = catchAsync(
 );
 
 const getOwnShiftRequests = catchAsync(async (req, res) => {
-  const result =
-    await ShiftAndLeaveRequestServices.getOwnShiftRequestsFromDB(req.user.id!);
+  const result = await ShiftAndLeaveRequestServices.getOwnShiftRequestsFromDB(
+    req.user.id!,
+  );
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
@@ -142,8 +142,9 @@ const getOwnShiftRequests = catchAsync(async (req, res) => {
 });
 
 const getOwnLeaveRequests = catchAsync(async (req, res) => {
-  const result =
-    await ShiftAndLeaveRequestServices.getOwnLeaveRequestsFromDB(req.user.id!);
+  const result = await ShiftAndLeaveRequestServices.getOwnLeaveRequestsFromDB(
+    req.user.id!,
+  );
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,

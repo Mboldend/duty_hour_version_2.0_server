@@ -78,7 +78,7 @@ const getLatesFromDB = async (userId: string) => {
     .sort({ createdAt: -1 })
     .limit(10);
 
-  // late calculateion
+  // late calculation
   const enrichedResult = result.map((att: any) => {
     const shiftStart = att.shiftID?.shiftStartTime;
     const checkIn = att.checkInTime;
@@ -100,109 +100,6 @@ const getLatesFromDB = async (userId: string) => {
   return enrichedResult;
 };
 
-// const getPresentSummaryLastSevenDaysFromDB = async (userId: string) => {
-//   // trace root owner
-//   let currentUser = await User.findById(userId).select('createdBy');
-//   let rootOwnerId = userId;
-
-//   while (currentUser?.createdBy) {
-//     rootOwnerId = currentUser.createdBy.toString();
-//     currentUser = await User.findById(currentUser.createdBy).select(
-//       'createdBy',
-//     );
-//   }
-
-//   // get all user IDs under root owner
-//   const allUserIds = await getAllUserIdsUnderRootOwner(rootOwnerId);
-//   const totalEmployees = await User.countDocuments({
-//     _id: { $in: allUserIds.map(id => new mongoose.Types.ObjectId(id)) },
-//     role: USER_ROLES.EMPLOYEE,
-//     status: 'ACTIVE',
-//   });
-
-//   // date range: last 7 days
-//   const today = startOfDay(new Date());
-//   const startDate = startOfDay(subDays(today, 6)); // includes today
-
-//   // fetch PRESENT attendances using checkInTime
-//   const attendanceData = await Attendance.aggregate([
-//     {
-//       $match: {
-//         userID: { $in: allUserIds.map(id => new mongoose.Types.ObjectId(id)) },
-//         status: STATUS.PRESENT,
-//         checkInTime: { $gte: startDate, $lte: today },
-//       },
-//     },
-//     {
-//       $group: {
-//         _id: {
-//           $dateToString: {
-//             format: '%Y-%m-%d',
-//             date: '$checkInTime',
-//           },
-//         },
-//         presentCount: { $sum: 1 },
-//       },
-//     },
-//     {
-//       $project: {
-//         _id: 0,
-//         date: '$_id',
-//         presentCount: 1,
-//       },
-//     },
-//   ]);
-
-//   // map date => presentCount
-//   const presentMap: Record<string, number> = {};
-//   attendanceData.forEach(item => {
-//     presentMap[item.date] = item.presentCount;
-//   });
-
-//   // weekday mapping
-//   const getDayName = (dateObj: Date): string => {
-//     return format(dateObj, 'EEE');
-//   };
-
-//   const finalResult = [];
-
-//   for (let i = 0; i < 7; i++) {
-//     const dateObj = addDays(startDate, i);
-//     const dateStr = format(dateObj, 'yyyy-MM-dd');
-//     const day = getDayName(dateObj);
-
-//     const presentCount = presentMap[dateStr] || 0;
-//     const percentage =
-//       totalEmployees > 0
-//         ? parseFloat(((presentCount / totalEmployees) * 100).toFixed(2))
-//         : 0;
-
-//     let changeFromYesterday: number | null = null;
-//     if (i > 0) {
-//       const prevDateStr = format(addDays(startDate, i - 1), 'yyyy-MM-dd');
-//       const prevCount = presentMap[prevDateStr] || 0;
-
-//       if (prevCount > 0) {
-//         changeFromYesterday = parseFloat(
-//           (((presentCount - prevCount) / prevCount) * 100).toFixed(2),
-//         );
-//       } else if (presentCount > 0) {
-//         changeFromYesterday = 100;
-//       } else {
-//         changeFromYesterday = 0;
-//       }
-//     }
-
-//     finalResult.push({
-//       day,
-//       presentCount,
-//       percentage,
-//       changeFromYesterday,
-//     });
-//   }
-
-//   return finalResult;
-// };
 
 const getPresentSummaryLastSevenDaysFromDB = async (userId: string) => {
   // trace root owner

@@ -11,11 +11,7 @@ router.post(
   NotificationController.sendNotifyBusinessOwners,
 );
 
-// router.get(
-//   '/admin/notify-business-owners',
-//   auth(USER_ROLES.BUSINESS_OWNER, USER_ROLES.SUPER_ADMIN),
-//   NotificationController.getNotifyBusinessOwners,
-// );
+
 
 router
   .route('/business-owner')

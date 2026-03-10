@@ -2,14 +2,14 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '../app/modules/user/user.model';
 
 const getRootOwner = async (userId: string) => {
-  let currentUser = await User.findById(userId).select(
-    '_id createdBy hasAccess',
-  ).lean();
+  let currentUser = await User.findById(userId)
+    .select('_id createdBy hasAccess')
+    .lean();
 
   while (currentUser?.createdBy) {
-    currentUser = await User.findById(currentUser.createdBy).select(
-      '_id createdBy hasAccess',
-    ).lean();
+    currentUser = await User.findById(currentUser.createdBy)
+      .select('_id createdBy hasAccess')
+      .lean();
   }
 
   return currentUser || null;
