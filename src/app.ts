@@ -32,9 +32,8 @@ app.use(
       'https://www.business.dutyhourapp.com',
       'https://api.dutyhourapp.com',
       'https://www.api.dutyhourapp.com',
-      "http://10.10.7.62:5174",
-      "http://10.10.7.62:5173"
-
+      'http://10.10.7.62:5174',
+      'http://10.10.7.62:5173',
     ],
     credentials: true,
   }),
@@ -47,7 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // serve /uploads folder as static
 //file retrieve
-app.use(express.static("uploads"));
+app.use(express.static('uploads'));
 // (Optional) Serve public folder
 app.use('/public', express.static(path.join(process.cwd(), 'public')));
 

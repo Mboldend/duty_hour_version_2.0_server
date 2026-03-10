@@ -5,6 +5,7 @@ A comprehensive backend API for managing human resources, employee attendance, s
 ## Features
 
 ### Core Management
+
 - **Employee Management:** Complete employee lifecycle management with personal and professional details
 - **Attendance Tracking:** Track employee attendance with check-in/check-out functionality
 - **Shift Management:** Create and manage work shifts with employee assignments
@@ -13,6 +14,7 @@ A comprehensive backend API for managing human resources, employee attendance, s
 - **Holiday Calendar:** Manage company holidays and special days
 
 ### Financial Features
+
 - **Payroll Management:** Calculate salaries with earnings and deductions
 - **Subscription Plans:** Multi-tier subscription packages for different business sizes
 - **Stripe Integration:** Secure payment processing with Stripe webhooks
@@ -20,6 +22,7 @@ A comprehensive backend API for managing human resources, employee attendance, s
 - **Payment Tracking:** Track transaction IDs and payment status
 
 ### Advanced Features
+
 - **Analytics Dashboard:** Real-time analytics on employee metrics and attendance
 - **User Notifications:** Email and in-app notifications for important events
 - **Real-time Updates:** Socket.io integration for live data synchronization
@@ -31,6 +34,7 @@ A comprehensive backend API for managing human resources, employee attendance, s
 ## Tech Stack
 
 ### Backend
+
 - **Runtime:** Node.js
 - **Language:** TypeScript
 - **Framework:** Express.js
@@ -38,21 +42,25 @@ A comprehensive backend API for managing human resources, employee attendance, s
 - **Real-time:** Socket.io
 
 ### Security & Authentication
+
 - **Authentication:** JWT (JSON Web Tokens)
 - **Password Hashing:** Bcrypt
 - **Data Validation:** Zod schemas
 - **Error Handling:** Custom error handlers
 
 ### Payment Processing
+
 - **Stripe API:** Payment processing and subscription management
 - **Webhook Management:** Stripe event handlers
 
 ### File Handling & Email
+
 - **File Upload:** Multer
 - **Email Service:** NodeMailer
 - **Email Templates:** HTML-based email templates
 
 ### Development & Logging
+
 - **Code Quality:** ESLint & Prettier
 - **Logging:** Winston with DailyRotateFile rotation
 - **Request Logging:** Morgan
@@ -94,12 +102,14 @@ src/
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/yourusername/hrm-system.git
    cd hrm-system
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
@@ -107,11 +117,13 @@ src/
 3. **Create `.env` file:**
 
    Copy `example.env` and configure:
+
    ```bash
    cp example.env .env
    ```
 
    Update the following variables:
+
    ```env
    # Server Configuration
    NODE_ENV=development
@@ -146,6 +158,7 @@ src/
    ```
 
 4. **Setup Database (Optional - Seed Admin):**
+
    ```bash
    npm run seed:admin
    ```
@@ -153,11 +166,13 @@ src/
 5. **Start the server:**
 
    Development mode:
+
    ```bash
    npm run dev
    ```
 
    Production build:
+
    ```bash
    npm run build
    npm start
@@ -172,6 +187,7 @@ docker-compose up -d
 ## API Modules
 
 ### Authentication (`/api/v1/auth`)
+
 - POST `/register` - Register new user
 - POST `/login` - User login
 - POST `/refresh-token` - Refresh JWT token
@@ -179,6 +195,7 @@ docker-compose up -d
 - POST `/reset-password` - Reset password with token
 
 ### Employees (`/api/v1/employees`)
+
 - GET `/` - List all employees
 - POST `/` - Create new employee
 - GET `/:id` - Get employee details
@@ -186,33 +203,39 @@ docker-compose up -d
 - DELETE `/:id` - Delete employee
 
 ### Attendance (`/api/v1/attendance`)
+
 - POST `/check-in` - Record check-in
 - POST `/check-out` - Record check-out
 - GET `/` - Get attendance records
 - GET `/report` - Generate attendance report
 
 ### Leaves (`/api/v1/leaves`)
+
 - POST `/request` - Submit leave request
 - GET `/` - Get leave requests
 - PATCH `/:id/approve` - Approve leave
 - PATCH `/:id/reject` - Reject leave
 
 ### Shifts (`/api/v1/shifts`)
+
 - GET `/` - List all shifts
 - POST `/` - Create shift
 - PATCH `/:id/assign` - Assign employee to shift
 
 ### Subscriptions (`/api/v1/subscriptions`)
+
 - POST `/checkout` - Create payment session
 - GET `/details` - Get subscription details
 - POST `/cancel` - Cancel subscription
 - GET `/billing-portal` - Access billing portal
 
 ### Payroll (`/api/v1/payroll`)
+
 - GET `/salary-slip/:id` - Get salary slip
 - POST `/process` - Process monthly payroll
 
 ### Analytics (`/api/v1/analytics`)
+
 - GET `/dashboard` - Dashboard metrics
 - GET `/attendance-report` - Attendance analytics
 - GET `/payroll-summary` - Payroll overview
@@ -220,6 +243,7 @@ docker-compose up -d
 ## Real-time Features (Socket.io)
 
 Connected to real-time notifications:
+
 - Employee online/offline status
 - Attendance updates
 - Leave request notifications
@@ -227,17 +251,19 @@ Connected to real-time notifications:
 - System notifications
 
 Connect WebSocket:
+
 ```javascript
 const socket = io('http://localhost:5000', {
   auth: {
-    token: 'jwt_token_here'
-  }
+    token: 'jwt_token_here',
+  },
 });
 ```
 
 ## Development
 
 ### Code Quality
+
 ```bash
 npm run lint       # Run ESLint
 npm run format     # Format code with Prettier
@@ -245,11 +271,13 @@ npm run lint:fix   # Fix linting errors
 ```
 
 ### Database Migrations
+
 ```bash
 npm run db:seed    # Seed database
 ```
 
 ### Load Testing
+
 ```bash
 npm run load-test  # Run load test (from test/loadTest.yaml)
 ```
@@ -264,6 +292,7 @@ npm run load-test  # Run load test (from test/loadTest.yaml)
 ## Error Handling
 
 Centralized error handling with custom error classes:
+
 - `ApiError` - Application errors
 - `ValidationError` - Zod validation errors
 - `ZodError` - Schema validation errors

@@ -14,7 +14,7 @@
     "start": "node dist/server.js"
   },
   "keywords": [],
-  "author": "Moshfiqur Rahman",
+  "author": "Md Abdur Rahman",
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

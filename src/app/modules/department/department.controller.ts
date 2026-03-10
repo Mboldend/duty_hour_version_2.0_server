@@ -5,12 +5,11 @@ import { DepartmentServices } from './department.service';
 import { Request, Response } from 'express';
 
 const createDepartment = catchAsync(async (req, res) => {
-
   const result = await DepartmentServices.createDepartmentToDB(
     req.body,
     req.user,
   );
-  if (result.status === "NOT_FOUND") {
+  if (result.status === 'NOT_FOUND') {
     sendResponse(res, {
       success: false,
       statusCode: StatusCodes.NOT_FOUND,
@@ -19,7 +18,7 @@ const createDepartment = catchAsync(async (req, res) => {
     });
     return;
   }
-  if (result.status === "FAILED") {
+  if (result.status === 'FAILED') {
     sendResponse(res, {
       success: false,
       statusCode: StatusCodes.BAD_REQUEST,
@@ -37,7 +36,10 @@ const createDepartment = catchAsync(async (req, res) => {
 });
 
 const getDepartments = catchAsync(async (req: Request, res: Response) => {
-  const result = await DepartmentServices.getDepartmentsFromDB(req.user!, req.query);
+  const result = await DepartmentServices.getDepartmentsFromDB(
+    req.user!,
+    req.query,
+  );
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,

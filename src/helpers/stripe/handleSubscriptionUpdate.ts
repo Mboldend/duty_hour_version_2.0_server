@@ -2,7 +2,6 @@ import Stripe from 'stripe';
 import stripe from '../../config/stripe';
 import { formatUnixToIsoUtc } from './handleSubscriptionCreated';
 import ApiError from '../../errors/ApiError';
-import { StatusCodes } from 'http-status-codes';
 import { User } from '../../app/modules/user/user.model';
 import { Package } from '../../app/modules/package/package.model';
 import { Subscription } from '../../app/modules/subscription/subscription.model';
@@ -77,7 +76,6 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
       if (
         String(currentActiveSubscription.packageId) !== String(pricingPlan._id)
       ) {
-  
         await Subscription.findByIdAndUpdate(currentActiveSubscription._id, {
           status: SUBSCRIPTION_STATUS.INACTIVE,
           remainingDays: 0,
@@ -106,7 +104,7 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
       } else {
         currentActiveSubscription.totalEmployees = employeeCount;
         currentActiveSubscription.price =
-         // @ts-ignore
+          // @ts-ignore
           pricingPlan.pricePerEmployee * employeeCount;
         currentActiveSubscription.currentPeriodStart =
           formatUnixToIsoUtc(currentPeriodStart);
@@ -143,7 +141,6 @@ export const handleSubscriptionUpdated = async (data: Stripe.Subscription) => {
         }
       }
     } else {
-
       const newSubscription = new Subscription({
         userId: existingUser._id,
         customerId: customer.id,

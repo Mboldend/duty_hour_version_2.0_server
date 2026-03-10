@@ -23,12 +23,6 @@ export const formatUnixToIsoUtc = (timestamp?: number): string => {
 export const handleSubscriptionCreated = async (
   subscriptionData: Stripe.Subscription,
 ) => {
-  // const getBusinessOwner = await User.findOne({
-  //   role: USER_ROLES.BUSINESS_OWNER,
-  // });
-  // if (!getBusinessOwner) {
-  //   throw new ApiError(StatusCodes.NOT_FOUND, 'Admin not found!');
-  // }
   const subscription = (await stripe.subscriptions.retrieve(
     subscriptionData.id,
   )) as any;
@@ -40,11 +34,12 @@ export const handleSubscriptionCreated = async (
   if (!customer.email) throw new ApiError(400, 'Customer email not found');
 
   const user = await User.findOne({ email: customer.email }).lean();
-  if (!user) return {
-    success: false,
-    status: StatusCodes.NOT_FOUND,
-    message: 'User not found for the given customer email',
-  };
+  if (!user)
+    return {
+      success: false,
+      status: StatusCodes.NOT_FOUND,
+      message: 'User not found for the given customer email',
+    };
   // if (user.role !== USER_ROLES.BUSINESS_OWNER)
   //   throw new ApiError(403, 'Only business owners allowed');
 
@@ -55,14 +50,15 @@ export const handleSubscriptionCreated = async (
       status: StatusCodes.BAD_REQUEST,
       message: 'Price ID not found in subscription items',
     };
-  };
+  }
 
   const pkg = await Package.findOne({ stripePriceId: priceId });
-  if (!pkg) return {
-    success: false,
-    status: StatusCodes.NOT_FOUND,
-    message: 'Package not found',
-  };
+  if (!pkg)
+    return {
+      success: false,
+      status: StatusCodes.NOT_FOUND,
+      message: 'Package not found',
+    };
 
   // already handled subscription (idempotent check)
   const existingStripeSub = await Subscription.findOne({
@@ -83,7 +79,7 @@ export const handleSubscriptionCreated = async (
       success: false,
       status: StatusCodes.CONFLICT,
       message: 'User already has an active subscription',
-    }
+    };
   }
 
   const totalEmployees = subscription.items.data[0]?.quantity || 0;
@@ -120,15 +116,7 @@ export const handleSubscriptionCreated = async (
     currentPeriodEnd: formatUnixToIsoUtc(currentPeriodEnd),
     subscriptionId: subscription.id,
   });
-  // const userUpdate = await User.findByIdAndUpdate(
-  //   user._id,
-  //   {
-  //     isSubscribed: true,
-  //     hasAccess: true,
-  //     packageName: pkg.planName,
-  //   },
-  //   { new: true },
-  // );
+
 
   try {
     await newSub.save();
@@ -175,16 +163,11 @@ export const findActiveSubscriptionWithRetry = async (
   delayMs = 1000,
 ) => {
   for (let i = 0; i < maxRetries; i++) {
-
-
-  
-
     const sub = await Subscription.findOne({
       userId,
       customerId,
       status: SUBSCRIPTION_STATUS.ACTIVE,
     }).sort({ createdAt: -1 });
-
 
     await new Promise(res => setTimeout(res, delayMs));
   }

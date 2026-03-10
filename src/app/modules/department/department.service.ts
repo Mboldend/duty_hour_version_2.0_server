@@ -11,26 +11,30 @@ import { Institution } from '../institution/institution.model';
 
 const createDepartmentToDB = async (payload: IDepartment, user: JwtPayload) => {
   payload.createdBy = user.id;
-  // get the institution from db 
+  // get the institution from db
   const institution = await Institution.findById(payload.institutionID).lean();
   if (!institution) {
     return {
-      status: "NOT_FOUND",
+      status: 'NOT_FOUND',
     } as const;
   }
   const result = await Department.create(payload);
 
   if (!result) {
     return {
-      status: "FAILED",
+      status: 'FAILED',
     } as const;
   }
 
   return result;
 };
 
-const getDepartmentsFromDB = async (userId: JwtPayload, query: Record<string, any>) => {
-  const qb = new QueryBuilder(Department.find({ createdBy: userId.id }), query).sort()
+const getDepartmentsFromDB = async (
+  userId: JwtPayload,
+  query: Record<string, any>,
+) => {
+  const qb = new QueryBuilder(Department.find({ createdBy: userId.id }), query)
+    .sort()
     .paginate()
     .fields()
     .populate(['createdBy', 'institutionID'], {
@@ -43,8 +47,8 @@ const getDepartmentsFromDB = async (userId: JwtPayload, query: Record<string, an
   ]);
   return {
     data,
-    meta
-  }
+    meta,
+  };
 };
 
 const getDepartmentByIdFromDB = async (

@@ -95,9 +95,10 @@ const createEmployeeToDB = async (
     Shift.findById(payload.shiftSchedule).lean().exec(),
   ]);
 
-  if (!institutions) return { status: "INSTITUTION_NOT_FOUND" } as const;
-  if (!departments) return { status: "DEPARTMENT_NOT_FOUND" } as const;
-  if (payload.shiftSchedule && !shifts) return { status: "SHIFT_NOT_FOUND" } as const;
+  if (!institutions) return { status: 'INSTITUTION_NOT_FOUND' } as const;
+  if (!departments) return { status: 'DEPARTMENT_NOT_FOUND' } as const;
+  if (payload.shiftSchedule && !shifts)
+    return { status: 'SHIFT_NOT_FOUND' } as const;
 
   // duplicate query remove
   const shift = shifts || null;
@@ -108,7 +109,10 @@ const createEmployeeToDB = async (
   });
 
   if (existingEmployee) {
-    throw new ApiError(StatusCodes.CONFLICT, 'This employee ID already exists in this institution');
+    throw new ApiError(
+      StatusCodes.CONFLICT,
+      'This employee ID already exists in this institution',
+    );
   }
 
   const userData = {
@@ -128,7 +132,7 @@ const createEmployeeToDB = async (
 
   const packageType = (packageDetails as any)?.packageId?.packageType;
 
-  if (packageType === "individual") {
+  if (packageType === 'individual') {
     // Individual package: always pay per employee (no free threshold)
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -157,10 +161,10 @@ const createEmployeeToDB = async (
       },
     });
     return {
-      status: "PAYMENT_REQUIRED",
+      status: 'PAYMENT_REQUIRED',
       paymentUrl: session.url,
     } as const;
-  } else if (packageType === "program") {
+  } else if (packageType === 'program') {
     const result = await ProgramForBulkUserCreation(payload, user);
     return result;
   }
@@ -169,7 +173,8 @@ const createEmployeeToDB = async (
   // default
   // ========================
   const result = await User.create(userData);
-  if (!result) throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create employee');
+  if (!result)
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create employee');
   return result;
 };
 
@@ -323,31 +328,6 @@ const getInstitutionsByOwnerIdFromDB = async (ownerId: string, query: any) => {
     data: institutionsWithEmployeeCount,
   };
 };
-
-// const updateProfileToDB = async (
-//   user: JwtPayload,
-//   payload: Partial<IUser>,
-// ): Promise<Partial<IUser | null>> => {
-//   const { id } = user;
-//   const isExistUser = await User.isExistUserById(id);
-//   if (!isExistUser) {
-//     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
-//   }
-
-//   const result = await User.findOneAndUpdate({ _id: id }, payload, {
-//     new: true,
-//   });
-
-//   //unlink file here
-//   if (payload.profileImage) {
-//     if (!result) {
-//       throw new ApiError(400, 'Failed to update profile');
-//     }
-//     unlinkFile(isExistUser.profileImage);
-//   }
-
-//   return result;
-// };
 
 const updateProfileToDB = async (
   user: JwtPayload,
@@ -558,7 +538,10 @@ const updateStatusToDB = async (
 ) => {
   const businessOwner = await User.findById(id);
   if (!businessOwner) {
-    throw new ApiError(StatusCodes.NOT_FOUND, 'No business owner found database');
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      'No business owner found database',
+    );
   }
   const result = await User.findByIdAndUpdate(id, { status }, { new: true });
   return result;

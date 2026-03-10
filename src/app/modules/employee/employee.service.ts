@@ -247,7 +247,7 @@ const deleteEmployeeByIdFromDB = async (userId: string, employeeID: string) => {
   await Subscription.findByIdAndUpdate(
     { userId: userId },
     { $inc: { totalEmployees: -1 } },
-    { new: true }
+    { new: true },
   );
   return result;
 };

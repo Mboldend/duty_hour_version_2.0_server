@@ -9,15 +9,20 @@ const createPackageSchemaValidation = z.object({
     isUnionized: z.boolean({
       required_error: 'isUnionized is required',
     }),
-    billingCycle: z.enum(Object.values(BILLING_CYCLE) as [string, ...string[]], {
-      required_error: 'Billing cycle is required',
-    }),
+    billingCycle: z.enum(
+      Object.values(BILLING_CYCLE) as [string, ...string[]],
+      {
+        required_error: 'Billing cycle is required',
+      },
+    ),
     price: z.number({
       required_error: 'Price is required',
     }),
-    isAdmin: z.string({
-      required_error: 'Admin ID is required',
-    }).regex(/^[0-9a-fA-F]{24}$/, 'Invalid admin ID format'),
+    isAdmin: z
+      .string({
+        required_error: 'Admin ID is required',
+      })
+      .regex(/^[0-9a-fA-F]{24}$/, 'Invalid admin ID format'),
     paymentLink: z.string().optional(),
     packageStatus: z.boolean({
       required_error: 'Package status is required',

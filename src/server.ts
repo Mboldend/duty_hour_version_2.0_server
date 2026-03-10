@@ -10,7 +10,7 @@ import config from './config';
 
 //uncaught exception
 process.on('uncaughtException', error => {
-  errorLogger.error('UnhandleException Detected', error);
+  errorLogger.error('Uncaught Exception Detected', error);
   process.exit(1);
 });
 

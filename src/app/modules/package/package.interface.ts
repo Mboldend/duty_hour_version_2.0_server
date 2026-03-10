@@ -1,16 +1,14 @@
 import { Types } from 'mongoose';
-import {
-  BILLING_CYCLE,
-} from './package.constant';
+import { BILLING_CYCLE } from './package.constant';
 
 export type IPackage = {
   planName: string;
   isUnionized: boolean;
   billingCycle: BILLING_CYCLE;
   price: number;
-  packageStatus: boolean,
+  packageStatus: boolean;
   person: number;
-  packageType: "individual" | "program";
+  packageType: 'individual' | 'program';
   paymentLink?: string;
   isAdmin: Types.ObjectId;
   stripeProductId?: string;

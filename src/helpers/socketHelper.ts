@@ -7,17 +7,14 @@ import { Attendance } from '../app/modules/attendance/attendance.model';
 import moment from 'moment';
 import { User } from '../app/modules/user/user.model';
 import { Location } from '../app/modules/location/location.model';
-import ApiError from '../errors/ApiError';
 
-
-// Online users track করতে map
-const onlineUsers = new Map<string, string>(); // socket.id -> userID
+const onlineUsers = new Map<string, string>();
 
 const socket = (io: Server) => {
   io.on('connection', (socket: Socket) => {
     logger.info(colors.blue(`🟢 Client connected: ${socket.id}`));
     socket.on('user-check-in', async (payload: any, callback: any) => {
-      const safeCallback = typeof callback === 'function' ? callback : () => { };
+      const safeCallback = typeof callback === 'function' ? callback : () => {};
 
       const token = socket.handshake.auth?.token;
       if (!token) {

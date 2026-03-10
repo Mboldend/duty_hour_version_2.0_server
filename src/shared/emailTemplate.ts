@@ -1,4 +1,8 @@
-import { ICreateAccount, IEmailTemplate, IResetPassword } from '../types/emailTamplate';
+import {
+  ICreateAccount,
+  IEmailTemplate,
+  IResetPassword,
+} from '../types/emailTamplate';
 
 const LOGO_URL = `https://res.cloudinary.com/dabd4udau/image/upload/v1772862251/xcvjopcwvaaxrt7uhbsx.png`;
 

@@ -8,8 +8,8 @@ import { Subscription } from '../app/modules/subscription/subscription.model';
 export const handlePaymentIntentSucceeded = async (
   paymentIntent: Stripe.PaymentIntent,
 ) => {
-  console.log("paymentIntent\n\n\n", 'paymentIntent');
-  console.log("customerId\n\n\n", paymentIntent.customer);
+  console.log('paymentIntent\n\n\n', 'paymentIntent');
+  console.log('customerId\n\n\n', paymentIntent.customer);
   const trxId = paymentIntent.id;
   console.log(trxId, 'trxId');
   try {

@@ -1,8 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { IPackage } from './package.interface';
-import {
-  BILLING_CYCLE,
-} from './package.constant';
+import { BILLING_CYCLE } from './package.constant';
 
 const packageSchema = new Schema<IPackage>(
   {

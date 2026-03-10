@@ -9,9 +9,10 @@ const getTotalEarningsFromDB = async (query: Record<string, any>) => {
     .sort()
     .paginate()
     .fields()
-    .populate(["userId", "packageId"], {
-      userId: "name email phone role profileImage status",
-      packageId: "planName isUnionized billingCycle currency discount discountValue pricePerEmployee",
+    .populate(['userId', 'packageId'], {
+      userId: 'name email phone role profileImage status',
+      packageId:
+        'planName isUnionized billingCycle currency discount discountValue pricePerEmployee',
     });
 
   const [data, meta] = await Promise.all([

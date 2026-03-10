@@ -75,26 +75,6 @@ const sendNotifyBusinessOwnersToDB = async (input: AdminNotifyInput) => {
   return results;
 };
 
-// const getNotifyBusinessOwnersFromDB = async (user: JwtPayload) => {
-//   const result = await Notification.find({
-//     type: 'ADMIN_NOTIFY',
-//   });
-
-//   console.log(result, 'Result');
-
-//   const unreadCount = await Notification.countDocuments({
-//     receiver: user.id,
-//     read: false,
-//   });
-
-//   const data = {
-//     result,
-//     unreadCount,
-//   };
-
-//   return data;
-// };
-
 // get notifications
 const getBusinessOwnerNotificationsFromDB = async (user: JwtPayload) => {
   const result = await Notification.find({

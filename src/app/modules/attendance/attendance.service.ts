@@ -46,7 +46,10 @@ const checkIn = async (userID: string, payload: any) => {
     institutionID: user.institutionID,
   });
   if (!location)
-    throw new ApiError(StatusCodes.NOT_FOUND, 'No location configured for this institution');
+    throw new ApiError(
+      StatusCodes.NOT_FOUND,
+      'No location configured for this institution',
+    );
 
   // validate WiFi credentials
   if (location.wifiIPAddress !== wifiIPAddress) {
@@ -156,7 +159,8 @@ const checkIn = async (userID: string, payload: any) => {
   else if (isVacationApproved) status = STATUS.LEAVE;
   else if (isWeekend) status = STATUS.OFFDAY;
   else {
-    if (!isInsideShift) throw new ApiError(StatusCodes.BAD_REQUEST, 'Not within shift hours');
+    if (!isInsideShift)
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Not within shift hours');
     status = isLate ? STATUS.LATE : STATUS.PRESENT;
   }
 
@@ -190,8 +194,6 @@ const checkIn = async (userID: string, payload: any) => {
 };
 
 cron.schedule('*/1 * * * *', async () => {
-
-
   const now = moment.utc();
   const startOfToday = now.clone().startOf('day').toDate();
   const endOfToday = now.clone().endOf('day').toDate();
@@ -295,15 +297,12 @@ cron.schedule('*/1 * * * *', async () => {
             durationMinutes: 0,
             status: statusToSet,
           });
-
-         
         } catch (err) {
           console.error(`❌ Error processing user ${user.name}:`, err);
         }
       }),
     );
   }
-
 });
 
 // helper function: Haversine formula to calculate distance (in meters)
@@ -772,53 +771,6 @@ function getCurrentWeekStartDate(): Date {
   sunday.setDate(now.getDate() - diff);
   return sunday;
 }
-
-// const getWeeklyAttendanceAnalytics = async (userID: string) => {
-//   const weekStartDate = getCurrentWeekStartDate();
-//   const weekEndDate = new Date(weekStartDate);
-//   weekEndDate.setDate(weekEndDate.getDate() + 7);
-
-//   const result = await Attendance.aggregate([
-//     {
-//       $match: {
-//         userID: new mongoose.Types.ObjectId(userID),
-//         checkInTime: { $gte: weekStartDate, $lt: weekEndDate },
-//       },
-//     },
-//     {
-//       $group: {
-//         _id: {
-//           year: { $year: '$checkInTime' },
-//           month: { $month: '$checkInTime' },
-//           day: { $dayOfMonth: '$checkInTime' },
-//         },
-//         totalDurationMinutes: { $sum: '$durationMinutes' },
-//       },
-//     },
-//   ]);
-
-//   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-//   const analytics: Record<string, number> = {};
-//   let totalMinutes = 0;
-
-//   for (let i = 0; i < 7; i++) {
-//     const date = new Date(weekStartDate);
-//     date.setDate(date.getDate() + i);
-
-//     const found = result.find(
-//       r =>
-//         r._id.year === date.getFullYear() &&
-//         r._id.month === date.getMonth() + 1 &&
-//         r._id.day === date.getDate(),
-//     );
-
-//     const minutes = found ? found.totalDurationMinutes : 0;
-//     analytics[daysOfWeek[i]] = minutes;
-//     totalMinutes += minutes;
-//   }
-
-//   return analytics;
-// };
 
 const getWeeklyAttendanceAnalytics = async (userID: string) => {
   const weekStartDate = getCurrentWeekStartDate();

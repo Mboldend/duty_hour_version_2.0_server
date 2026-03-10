@@ -69,18 +69,6 @@ const createSubscriptionCheckoutSession = catchAsync(
   },
 );
 
-// const updateSubscription = catchAsync(async (req, res) => {
-//     const { id } = req.user;
-//     const updatedPayload = req.body;
-//     const result = await SubscriptionServices.updateSubscriptionToDB(id, updatedPayload);
-//     sendResponse(res, {
-//         success: true,
-//         statusCode: 200,
-//         message: "Subscription updated successfully",
-//         data: result,
-//     })
-// })
-
 const getBillingPortalSession = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.user;

@@ -1,85 +1,84 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Socket.IO Check-In Test</title>
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Socket.IO Check-In Test</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
 
-    pre {
-      background: #f5f5f5;
-      padding: 10px;
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-    }
-  </style>
-</head>
-<body>
-  <h3>🔌 Socket.IO Check-In Tester</h3>
-  <pre id="log"></pre>
+      pre {
+        background: #f5f5f5;
+        padding: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>🔌 Socket.IO Check-In Tester</h3>
+    <pre id="log"></pre>
 
-  <script>
-    const log = (msg) => {
-      const logEl = document.getElementById("log");
-      logEl.textContent += msg + "\n";
-      logEl.scrollTop = logEl.scrollHeight;
-    };
+    <script>
+      const log = msg => {
+        const logEl = document.getElementById('log');
+        logEl.textContent += msg + '\n';
+        logEl.scrollTop = logEl.scrollHeight;
+      };
 
-    // ✅ JWT Token (replace if needed)
+      // ✅ JWT Token (replace if needed)
 
+      const TOKEN =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTJlOWU1ZTQ2MGEwZmFmYjNhODhiNSIsInJvbGUiOiJFTVBMT1lFRSIsImVtYWlsIjoiZW1hbWJva2hhcmkyQGdtYWlsLmNvbSIsImlhdCI6MTc1NTU5OTExNSwiZXhwIjoxNzU4MTkxMTE1fQ.3zvfmtSBUmvuTphSj9j70N5U7zIdWLXoPDDP5vDecrs';
 
-    const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTJlOWU1ZTQ2MGEwZmFmYjNhODhiNSIsInJvbGUiOiJFTVBMT1lFRSIsImVtYWlsIjoiZW1hbWJva2hhcmkyQGdtYWlsLmNvbSIsImlhdCI6MTc1NTU5OTExNSwiZXhwIjoxNzU4MTkxMTE1fQ.3zvfmtSBUmvuTphSj9j70N5U7zIdWLXoPDDP5vDecrs";
+      const payload = {
+        wifiIPAddress: '192.168.0.1',
+        // wifiSSID: "Jv-Ai-WiFi",
+        // latitude: 21.3630,
+        // longitude: 92.7958
+      };
 
+      log('⏳ Connecting to socket.io server...');
 
-    const payload = {
-      wifiIPAddress: "192.168.0.1",
-      // wifiSSID: "Jv-Ai-WiFi",
-      // latitude: 21.3630,
-      // longitude: 92.7958
-    };
-
-    log("⏳ Connecting to socket.io server...");
-
-    const socket = io("http://10.10.7.111:5002", {
-      auth: { token: TOKEN },
-      reconnectionAttempts: 3,
-      timeout: 5000
-    });
-
-    // ✅ On connection success
-    socket.on("connect", () => {
-      log("✅ Connected with socket ID: " + socket.id);
-
-      socket.emit("user-check-in", payload, (response) => {
-        if (response?.status === "success") {
-          log("🟢 Check-in Success:");
-          log(JSON.stringify(response.attendance, null, 2));
-        } else {
-          log("🔴 Check-in Error: " + (response?.message || "Unknown Error"));
-        }
+      const socket = io('http://10.10.7.111:5002', {
+        auth: { token: TOKEN },
+        reconnectionAttempts: 3,
+        timeout: 5000,
       });
-    });
 
-    // ❌ On connection error
-    socket.on("connect_error", (err) => {
-      log("❌ Connection Error: " + err.message);
-    });
+      // ✅ On connection success
+      socket.on('connect', () => {
+        log('✅ Connected with socket ID: ' + socket.id);
 
-    // 🔌 On disconnect
-    socket.on("disconnect", (reason) => {
-      log("🔴 Disconnected: " + reason);
-    });
+        socket.emit('user-check-in', payload, response => {
+          if (response?.status === 'success') {
+            log('🟢 Check-in Success:');
+            log(JSON.stringify(response.attendance, null, 2));
+          } else {
+            log('🔴 Check-in Error: ' + (response?.message || 'Unknown Error'));
+          }
+        });
+      });
 
-    // ✅ Listen for real-time duration updates
-    socket.on("attendance-duration-update", (data) => {
-      log("⏱️ Duration Update:");
-      log(JSON.stringify(data, null, 2));
-    });
-  </script>
-</body>
+      // ❌ On connection error
+      socket.on('connect_error', err => {
+        log('❌ Connection Error: ' + err.message);
+      });
+
+      // 🔌 On disconnect
+      socket.on('disconnect', reason => {
+        log('🔴 Disconnected: ' + reason);
+      });
+
+      // ✅ Listen for real-time duration updates
+      socket.on('attendance-duration-update', data => {
+        log('⏱️ Duration Update:');
+        log(JSON.stringify(data, null, 2));
+      });
+    </script>
+  </body>
 </html>
