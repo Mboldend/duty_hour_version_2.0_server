@@ -8,14 +8,27 @@ export const handleIndividualSubscriptionCreated = async (
   session: Stripe.Checkout.Session,
 ) => {
   try {
-    // Extract metadata
+    // Extract metadata (userId is sent by user.service & ProgramForBulkUserCreation)
     const subscriptionId = session.metadata?.subscriptionId;
-    const userId = session.metadata?.user;
-    const employeeData = JSON.parse(session.metadata?.employeeData || '{}');
-    const packagePrice = Number(session.metadata?.packagePrice || 0);
+    const userId = session.metadata?.userId || session.metadata?.user;
+    const packageType = session.metadata?.packageType;
+    const employeeDataStr = session.metadata?.employeeData;
 
     if (!subscriptionId || !userId) {
       console.error('❌ Missing subscriptionId or userId in metadata');
+      return;
+    }
+
+    if (!employeeDataStr) {
+      console.error('❌ Missing employeeData in metadata - not an employee purchase');
+      return;
+    }
+
+    let employeeData: Record<string, unknown>;
+    try {
+      employeeData = JSON.parse(employeeDataStr);
+    } catch {
+      console.error('❌ Invalid employeeData JSON in metadata');
       return;
     }
 
@@ -33,18 +46,18 @@ export const handleIndividualSubscriptionCreated = async (
     }
 
     // Prevent duplicate employee
-    const userExists = await User.findOne({ email: employeeData.email });
-    if (userExists) {
-      console.log(
-        '⚠️ Employee already exists, skipping creation:',
-        employeeData.email,
-      );
-      return;
+    const empEmail = (employeeData as { email?: string }).email;
+    if (empEmail) {
+      const userExists = await User.findOne({ email: empEmail });
+      if (userExists) {
+        console.log('⚠️ Employee already exists, skipping creation:', empEmail);
+        return;
+      }
     }
 
     // Create employee
     const newEmployee = await User.create({
-      ...employeeData,
+      ...(employeeData as object),
       verified: true,
       createdBy: userId,
     });
@@ -54,7 +67,7 @@ export const handleIndividualSubscriptionCreated = async (
       const template = emailTemplate.employeeEmailTemplate({
         name: newEmployee.name,
         email: newEmployee.email!,
-        password: employeeData.password || '12345678',
+        password: (employeeData as { password?: string }).password || '12345678',
       });
       await emailHelper.sendEmail(template);
       console.log('✅ Email sent to:', newEmployee.email);
@@ -62,17 +75,18 @@ export const handleIndividualSubscriptionCreated = async (
       console.error('❌ Email sending failed:', err);
     }
 
-    // Update subscription totalEmployees
-    if (subscription.totalEmployees > 0) {
-      // seats available → decrement
-      await Subscription.findByIdAndUpdate(subscriptionId, {
-        $inc: { totalEmployees: -1 },
-      });
-    } else {
-      // seats 0 → paid extra → increment price
-      await Subscription.findByIdAndUpdate(subscriptionId, {
-        $inc: { price: packagePrice },
-      });
+    // Update subscription: totalEmployees for individual, trxId for both
+    const trxId =
+      typeof session.payment_intent === 'string'
+        ? session.payment_intent
+        : session.payment_intent?.id;
+    const updatePayload: Record<string, unknown> = {};
+    if (trxId) updatePayload.trxId = trxId;
+    if (packageType === 'individual') {
+      updatePayload.$inc = { totalEmployees: 1 };
+    }
+    if (Object.keys(updatePayload).length > 0) {
+      await Subscription.findByIdAndUpdate(subscriptionId, updatePayload);
     }
 
     console.log(

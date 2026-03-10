@@ -51,7 +51,7 @@ export const ProgramForBulkUserCreation = async (
       cancel_url:
         config.stripe.BULK_EMPLOYEE_CREATION_AFTER_PAYMENT_LINK_Failed!,
       metadata: {
-        user: user.id,
+        userId: user.id,
         packageId: (subscription as any).packageId._id.toString(),
         packageName: packageDetails.planName,
         employeeData: JSON.stringify(payload),
