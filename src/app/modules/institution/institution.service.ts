@@ -15,6 +15,7 @@ const createInstitutionToDB = async (
   payload: TInstitution,
   user: JwtPayload,
 ) => {
+  
   // check if user is exist
   const isUserExists = await User.isExistUserByEmail(user.email);
 

@@ -297,9 +297,9 @@ const getOwnShiftRequestsFromDB = async (userId: string) => {
       ],
     })
     .populate('currentShiftID requestedShiftID')
-    .sort({ createdAt: -1 }); // ✅ নতুন আগে
+    .sort({ createdAt: -1 });
   if (!shiftRequests || shiftRequests.length === 0) {
-    throw new ApiError(404, 'No availale shift requests');
+    throw new ApiError(StatusCodes.NOT_FOUND, 'No available shift requests');
   }
   return shiftRequests;
 };
@@ -332,7 +332,7 @@ const getOwnLeaveRequestsFromDB = async (userId: string) => {
     .populate('currentShiftID requestedShiftID')
     .sort({ createdAt: -1 });
   if (!leaveRequests || leaveRequests.length === 0) {
-    throw new ApiError(404, 'No available leave requests');
+    throw new ApiError(StatusCodes.NOT_FOUND, 'No available leave requests');
   }
   return leaveRequests;
 };

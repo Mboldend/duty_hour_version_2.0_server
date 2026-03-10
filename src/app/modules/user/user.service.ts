@@ -129,62 +129,37 @@ const createEmployeeToDB = async (
   const packageType = (packageDetails as any)?.packageId?.packageType;
 
   if (packageType === "individual") {
-    const currentEmployeeCount = packageDetails?.totalEmployees ?? 0;
-
-    if (currentEmployeeCount >= 2) {
-      const session = await stripe.checkout.sessions.create({
-        mode: 'payment',
-        payment_method_types: ['card'],
-        customer_email: user.email,
-        line_items: [
-          {
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: (packageDetails as any)?.packageId.planName,
-              },
-              unit_amount: (packageDetails as any)?.packageId.price * 100,
+    // Individual package: always pay per employee (no free threshold)
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      customer_email: user.email,
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: (packageDetails as any)?.packageId.planName,
             },
-            quantity: 1,
+            unit_amount: (packageDetails as any)?.packageId.price * 100,
           },
-        ],
-        success_url: config.stripe.EMPLOYEE_CREATION_AFTER_PAYMENT_LINK!,
-        cancel_url: config.stripe.EMPLOYEE_CREATION_AFTER_PAYMENT_LINK_Failed!,
-        metadata: {
-          userData: JSON.stringify(userData),
-          userId: user.id,
-          subscriptionId: String((packageDetails as any)?._id),
-          packagePrice: String((packageDetails as any)?.packageId.price),
+          quantity: 1,
         },
-      });
-      return {
-        status: "PAYMENT_REQUIRED",
-        paymentUrl: session.url,
-      } as const;
-
-    } else {
-      await Subscription.findOneAndUpdate(
-        { userId: user.id, status: SUBSCRIPTION_STATUS.ACTIVE },
-        { $inc: { totalEmployees: 1 } },
-      );
-
-      const result = await User.create(userData);
-      // need to send email to employee after creation
-      const createAccountTemplate = emailTemplate.employeeEmailTemplate({
-        name: result.name,
-        email: result.email!,
-        password: '12345678',
-      });
-      try {
-        await emailHelper.sendEmail(createAccountTemplate);
-        console.log('✅ Email sent to:', result.email);
-      } catch (err) {
-        console.error('❌ Email sending failed:', err);
-      }
-
-      if (!result) throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create employee');
-      return result;
-    }
+      ],
+      success_url: config.stripe.EMPLOYEE_CREATION_AFTER_PAYMENT_LINK!,
+      cancel_url: config.stripe.EMPLOYEE_CREATION_AFTER_PAYMENT_LINK_Failed!,
+      metadata: {
+        employeeData: JSON.stringify(userData),
+        packageType: 'individual',
+        userId: user.id,
+        subscriptionId: String((packageDetails as any)?._id),
+        packagePrice: String((packageDetails as any)?.packageId.price),
+      },
+    });
+    return {
+      status: "PAYMENT_REQUIRED",
+      paymentUrl: session.url,
+    } as const;
   } else if (packageType === "program") {
     const result = await ProgramForBulkUserCreation(payload, user);
     return result;
