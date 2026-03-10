@@ -152,6 +152,7 @@ const createEmployeeToDB = async (
         cancel_url: config.stripe.EMPLOYEE_CREATION_AFTER_PAYMENT_LINK_Failed!,
         metadata: {
           userData: JSON.stringify(userData),
+          packageType: 'individual',
           userId: user.id,
           subscriptionId: String((packageDetails as any)?._id),
           packagePrice: String((packageDetails as any)?.packageId.price),

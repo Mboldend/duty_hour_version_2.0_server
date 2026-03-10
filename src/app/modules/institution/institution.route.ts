@@ -1,4 +1,4 @@
-import express, { NextFunction, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import auth from '../../middlewares/auth';
 import { USER_ROLES } from '../../../enums/user';
 import { InstitutionControllers } from './institution.controller';
@@ -17,18 +17,19 @@ router
   .post(
     auth(USER_ROLES.BUSINESS_OWNER),
     fileUploadHandler(),
-    async (req, res, next) => {
+    async (req: Request, _res: Response, next: NextFunction) => {
       try {
-        const image = getSingleFilePath(req.files, 'image');
-        if (!image) {
-          sendResponse(res, {
+        const logo = getSingleFilePath(req.files, 'logo');
+        console.log('logo\n\n\n', logo);
+        if (!logo) {
+          sendResponse(_res, {
             success: false,
             statusCode: StatusCodes.BAD_REQUEST,
-            message: 'Image is required',
+            message: 'Logo is required',
           });
           return;
         }
-        req.body.logo = image as string;
+        req.body.logo = logo;
         next();
       } catch (error) {
         next(error);
@@ -72,7 +73,10 @@ router
     async (req, _res: Response, next: NextFunction) => {
       try {
         const image = getSingleFilePath(req.files, 'image');
-        req.body.logo = image as string;
+        if (image) {
+          req.body!.logo = image;
+        }
+
         next();
       } catch (error) {
         next(error);

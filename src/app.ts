@@ -46,8 +46,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // serve /uploads folder as static
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-
+//file retrieve
+app.use(express.static("uploads"));
 // (Optional) Serve public folder
 app.use('/public', express.static(path.join(process.cwd(), 'public')));
 
