@@ -65,7 +65,10 @@ const fileUploadHandler = () => {
     },
 
     filename: (req, file, cb) => {
-      const fileExt = path.extname(file.originalname);
+      let fileExt = path.extname(file.originalname).toLowerCase();
+      if (fileExt === '.heic' || fileExt === '.heif') {
+        fileExt = '.heic';
+      }
       const fileName =
         file.originalname
           .replace(fileExt, '')
@@ -88,7 +91,9 @@ const fileUploadHandler = () => {
       file.fieldname === 'banner' ||
       file.fieldname === 'permits' ||
       file.fieldname === 'insurance' ||
-      file.fieldname === 'driverLicense'
+      file.fieldname === 'driverLicense' ||
+      file.fieldname === 'heic' ||
+      file.fieldname === 'heif'
     ) {
       if (
         file.mimetype === 'image/png' ||
@@ -97,14 +102,16 @@ const fileUploadHandler = () => {
         file.mimetype === 'image/svg' ||
         file.mimetype === 'image/webp' ||
         file.mimetype === 'application/octet-stream' ||
-        file.mimetype === 'image/svg+xml'
+        file.mimetype === 'image/svg+xml' ||
+        file.mimetype === 'image/heic' ||
+        file.mimetype === 'image/heif'
       ) {
         cb(null, true);
       } else {
         cb(
           new ApiError(
             StatusCodes.BAD_REQUEST,
-            'Only .jpeg, .png, .jpg .svg .webp .octet-stream .svg+xml file supported',
+            'Only .jpeg, .png, .jpg, .svg, .webp, .heic, .heif file supported',
           ),
         );
       }
@@ -148,13 +155,13 @@ const fileUploadHandler = () => {
         file.mimetype === 'application/pdf' ||
         file.mimetype === 'application/msword' ||
         file.mimetype ===
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
         file.mimetype === 'application/vnd.ms-excel' ||
         file.mimetype ===
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
         file.mimetype === 'application/vnd.ms-powerpoint' ||
         file.mimetype ===
-          'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
         file.mimetype === 'text/plain' ||
         file.mimetype === 'application/rtf' ||
         file.mimetype === 'application/zip' ||

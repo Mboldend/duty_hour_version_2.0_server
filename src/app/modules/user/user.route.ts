@@ -32,14 +32,20 @@ router
       USER_ROLES.SUPER_ADMIN,
     ),
     fileUploadHandler(),
-    (req: Request, res: Response, next: NextFunction) => {
-      if (req.body.data) {
-        req.body = UserValidation.updateUserZodSchema.parse(
-          JSON.parse(req.body.data),
-        );
+
+    async (req: Request, _res: Response, next: NextFunction) => {
+      const image = getSingleFilePath(req.files, 'profileImage');
+      if (image) {
+        req.body.profileImage = image;
       }
-      return UserController.updateProfile(req, res, next);
+      req.body = {
+        ...req.body,
+        profileImage: image,
+      }
+      next();
     },
+    validateRequest(UserValidation.updateUserZodSchema),
+    UserController.updateProfile,
   );
 
 router
